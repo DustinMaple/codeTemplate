@@ -1,0 +1,27 @@
+<idea-plugin>
+    <id>org.example.codeTemplate</id>
+    <name>Code Template</name>
+    <vendor email="gjf66924011@gmail.com"/>
+
+    <description>Customize code template and use for create codes.</description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <postStartupActivity implementation="cool.dustin.service.PluginInitializeService"/>
+        <applicationService serviceInterface="cool.dustin.service.UseTemplateService"
+                            serviceImplementation="cool.dustin.service.impl.UseTemplateServiceImpl"/>
+        <projectConfigurable provider="cool.dustin.config.CodeTemplateConfigurationProvider" id="templateConfig"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="cool.dustin.action.NewTemplateAction" class="cool.dustin.action.NewTemplateAction"
+                text="use template" description="Create package and classes with template.">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
+        </action>
+    </actions>
+</idea-plugin>
