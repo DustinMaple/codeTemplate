@@ -23,6 +23,8 @@ dependencies {
 intellij {
     version '2019.3.4'
     plugins 'java'
+    // 解决版本兼容问题
+    intellij.updateSinceUntilBuild false
 }
 patchPluginXml {
     changeNotes """
