@@ -14,7 +14,7 @@ public class EditClassForm {
     private JPanel root;
     private JTextField parentNameField;
     private JTextField classNameField;
-    private JTextArea classContentField;
+    private JTextArea textArea1;
 
     private TemplateClass templateClass = new TemplateClass();
 
