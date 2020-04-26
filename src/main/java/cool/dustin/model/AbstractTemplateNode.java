@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement;
 import com.sun.istack.NotNull;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -14,12 +15,11 @@ import java.util.function.Consumer;
  * @AUTHOR Dustin
  * @DATE 2020/04/13 20:50
  */
-public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateNode>, TemplateElement {
+public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateNode>, TemplateElement, Copyable<AbstractTemplateNode> {
     /**
      * 元素名称
      */
     private String name;
-
     /**
      * 所有子节点
      */
@@ -80,5 +80,30 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
 
     public void setChildren(Set<AbstractTemplateNode> children) {
         this.children = children;
+    }
+
+    /**
+     * 深度遍历移除目标节点
+     * @param nodeName
+     * @return
+     */
+    public AbstractTemplateNode removeNode(String nodeName) {
+        AbstractTemplateNode removed = null;
+        Iterator<AbstractTemplateNode> iterator = children.iterator();
+        while (iterator.hasNext()) {
+            AbstractTemplateNode next = iterator.next();
+            if (next.getName().equals(nodeName)) {
+                iterator.remove();
+                removed = next;
+                break;
+            }
+
+            removed = next.removeNode(nodeName);
+            if (removed != null) {
+                break;
+            }
+        }
+
+        return removed;
     }
 }

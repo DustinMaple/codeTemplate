@@ -9,14 +9,20 @@ import com.intellij.psi.PsiElement;
  * @AUTHOR Dustin
  * @DATE 2020/04/15 20:29
  */
-public interface UseTemplateService {
+public interface TemplateService {
     /**
      * 获取单例
      * @return
      */
-    static UseTemplateService getInstance() {
-        return ServiceManager.getService(UseTemplateService.class);
+    static TemplateService getInstance() {
+        return ServiceManager.getService(TemplateService.class);
     }
+
+    /**
+     * 从配置文件中加载模板
+     * @param configFilePath 配置文件路径
+     */
+    void loadTemplates(String configFilePath);
 
     /**
      * 使用模板创建所有元素
@@ -26,4 +32,10 @@ public interface UseTemplateService {
      * @param templateName 模块名称
      */
     void createSelectTemplate(Project project, PsiElement selectElement, String selectTemplate, String templateName);
+
+    /**
+     * 删除模板
+     * @param identify
+     */
+    void removeTemplate(String identify);
 }

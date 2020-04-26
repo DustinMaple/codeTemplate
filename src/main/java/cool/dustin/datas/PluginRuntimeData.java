@@ -1,8 +1,10 @@
 package cool.dustin.datas;
 
+import com.intellij.openapi.project.Project;
 import cool.dustin.model.Template;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.TreeMap;
 
 /**
@@ -16,6 +18,7 @@ public class PluginRuntimeData {
      * 所有模板<name, template>
      */
     private TreeMap<String, Template> templateTreeMap = new TreeMap<>();
+    private Project project;
 
     /**
      * 检查模板名称
@@ -52,6 +55,18 @@ public class PluginRuntimeData {
 
     public Collection<Template> getAllTemplate() {
         return templateTreeMap.values();
+    }
+
+    public void addTemplates(List<Template> templates) {
+        templates.forEach(template -> templateTreeMap.put(template.getName(), template));
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Project getProject() {
+        return project;
     }
 
     private static class InstanceHandler {

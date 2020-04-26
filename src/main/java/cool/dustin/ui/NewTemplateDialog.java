@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.PsiElement;
 import cool.dustin.constant.MessageType;
-import cool.dustin.service.UseTemplateService;
+import cool.dustin.service.TemplateService;
 import cool.dustin.ui.forms.NewTemplateForm;
 import cool.dustin.util.MessageUtils;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +49,7 @@ public class NewTemplateDialog extends DialogWrapper {
     @Override
     protected void doOKAction() {
         super.doOKAction();
-        MessageUtils.showMessageLog(project, MessageType.INFO, "name:{},template:{}", form.getName(), form.getSelectTemplate());
-        UseTemplateService.getInstance().createSelectTemplate(project, selectElement, form.getSelectTemplate(), form.getName());
+        MessageUtils.showMessageLog(MessageType.INFO, "name:{},template:{}", form.getName(), form.getSelectTemplate());
+        TemplateService.getInstance().createSelectTemplate(project, selectElement, form.getSelectTemplate(), form.getName());
     }
 }

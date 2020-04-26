@@ -15,9 +15,15 @@ import com.intellij.psi.impl.file.PsiJavaDirectoryImpl;
  */
 public class TemplatePackage extends AbstractTemplateNode {
 
-    @Override
-    public void writeToXml() {
+    public TemplatePackage() {
 
+    }
+
+    public TemplatePackage(TemplatePackage templatePackage) {
+        this.setName(templatePackage.getName());
+        for (AbstractTemplateNode child : templatePackage.getChildren()) {
+            this.getChildren().add(child.copy());
+        }
     }
 
     @Override
@@ -30,5 +36,10 @@ public class TemplatePackage extends AbstractTemplateNode {
         PsiDirectory directory = dirFactory.createDirectory(((PsiJavaDirectoryImpl) parentElement).getVirtualFile());
 
         return WriteCommandAction.runWriteCommandAction(project, (Computable<PsiDirectory>) () -> directory.createSubdirectory(this.getName()));
+    }
+
+    @Override
+    public AbstractTemplateNode copy() {
+        return new TemplatePackage(this);
     }
 }

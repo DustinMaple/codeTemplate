@@ -31,10 +31,16 @@ public class TemplateClass extends AbstractTemplateNode {
      */
     private String[] importClass;
 
-    @Override
-    public void writeToXml() {
+    public TemplateClass() {
 
     }
+
+    public TemplateClass(TemplateClass templateClass) {
+        this.setName(templateClass.getName());
+        this.setContent(templateClass.getContent());
+        this.setImportClass(templateClass.getImportClass());
+    }
+
 
     @Override
     protected PsiElement createSelfPsiElement(Project project, PluginContext context, PsiElement parentElement) {
@@ -85,5 +91,10 @@ public class TemplateClass extends AbstractTemplateNode {
 
     public void setImportClass(String[] importClass) {
         this.importClass = importClass;
+    }
+
+    @Override
+    public AbstractTemplateNode copy() {
+        return new TemplateClass(this);
     }
 }

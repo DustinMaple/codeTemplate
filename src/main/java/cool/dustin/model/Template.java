@@ -14,10 +14,18 @@ import com.intellij.psi.impl.file.PsiJavaDirectoryImpl;
  * @DATE 2020/4/13 20:47
  */
 public class Template extends AbstractTemplateNode {
+    private String description = "";
 
-    @Override
-    public void writeToXml() {
+    public Template() {
 
+    }
+
+    public Template(Template template) {
+        this.setName(template.getName());
+        this.setDescription(template.getDescription());
+        for (AbstractTemplateNode child : template.getChildren()) {
+            this.getChildren().add(child.copy());
+        }
     }
 
     @Override
@@ -32,4 +40,16 @@ public class Template extends AbstractTemplateNode {
         return WriteCommandAction.runWriteCommandAction(project, (Computable<PsiDirectory>) () -> directory.createSubdirectory(context.getTemplateName()));
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public AbstractTemplateNode copy() {
+        return new Template(this);
+    }
 }

@@ -12,7 +12,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <postStartupActivity implementation="cool.dustin.service.PluginInitializeService"/>
-        <applicationService serviceInterface="cool.dustin.service.UseTemplateService"
+        <applicationService serviceInterface="cool.dustin.service.TemplateService"
                             serviceImplementation="cool.dustin.service.impl.UseTemplateServiceImpl"/>
         <projectConfigurable provider="cool.dustin.config.CodeTemplateConfigurationProvider" id="templateConfig"/>
     </extensions>

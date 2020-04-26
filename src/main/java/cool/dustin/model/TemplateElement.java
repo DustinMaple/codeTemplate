@@ -16,11 +16,6 @@ public interface TemplateElement {
     String getName();
 
     /**
-     * 写入xml
-     */
-    void writeToXml();
-
-    /**
      * 创建PSI文件
      * @param project
      * @param context

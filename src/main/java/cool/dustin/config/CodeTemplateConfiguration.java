@@ -2,6 +2,7 @@ package cool.dustin.config;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.project.Project;
 import cool.dustin.ui.forms.ConfigurationForm;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +19,7 @@ public class CodeTemplateConfiguration implements Configurable {
 
     private boolean modified = false;
 
-    public CodeTemplateConfiguration() {
+    public CodeTemplateConfiguration(Project project) {
         this.form = new ConfigurationForm(this);
     }
 
@@ -41,6 +42,7 @@ public class CodeTemplateConfiguration implements Configurable {
 
     public void setModified(boolean modified) {
         this.modified = modified;
+        form.refreshTableData();
     }
 
     @Override

@@ -4,6 +4,9 @@ import cool.dustin.datas.PluginRuntimeData;
 import cool.dustin.model.Template;
 import cool.dustin.model.TemplateClass;
 import cool.dustin.model.TemplatePackage;
+import cool.dustin.xml.XmlUtils;
+
+import java.util.Collections;
 
 /**
  *
@@ -48,7 +51,10 @@ public class PluginMock {
         template1.addChild(servicePackage);
 
         template1.setName(MOCK_TEMPLATE_NAME);
+        template1.setDescription("这是一个测试模板");
 
         PluginRuntimeData.getInstance().addTemplate(template1);
+
+        XmlUtils.writeToXml(Collections.singleton(template1), "e:/mock.xml");
     }
 }
