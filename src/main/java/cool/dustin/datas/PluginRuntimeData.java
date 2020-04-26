@@ -43,10 +43,10 @@ public class PluginRuntimeData {
 
     /**
      * 新增模板
-     * @param tempalte
+     * @param template
      */
-    public void addTemplate(Template tempalte) {
-        templateTreeMap.put(tempalte.getName(), tempalte);
+    public void addTemplate(Template template) {
+        templateTreeMap.put(template.getName(), template);
     }
 
     public static PluginRuntimeData getInstance() {
@@ -67,6 +67,10 @@ public class PluginRuntimeData {
 
     public Project getProject() {
         return project;
+    }
+
+    public void removeTemplate(String selectTemplateName) {
+        templateTreeMap.remove(selectTemplateName);
     }
 
     private static class InstanceHandler {

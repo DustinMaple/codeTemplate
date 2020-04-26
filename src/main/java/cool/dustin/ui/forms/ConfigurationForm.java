@@ -145,16 +145,8 @@ public class ConfigurationForm {
         refreshTableData();
     }
 
-    private void doDelete() {
-        int selectedRow = templatesTable.getSelectedRow();
-        if (selectedRow < 0 || selectedRow >= templatesTable.getRowCount()) {
-            MessageUtils.showMessageLog(MessageType.ERROR, "选择了错误的行号：{}", selectedRow);
-            return;
-        }
-
-        String identify = (String) tableModel.getValueAt(selectedRow, 0);
-        tableModel.removeRow(selectedRow);
-        TemplateService.getInstance().removeTemplate(identify);
+    private void doCreate() {
+        new EditTemplateDialog(this, null).showAndGet();
     }
 
     private void doEdit() {
@@ -170,8 +162,16 @@ public class ConfigurationForm {
         new EditTemplateDialog(this, identify).showAndGet();
     }
 
-    private void doCreate() {
-        new EditTemplateDialog(this, null).showAndGet();
+    private void doDelete() {
+        int selectedRow = templatesTable.getSelectedRow();
+        if (selectedRow < 0 || selectedRow >= templatesTable.getRowCount()) {
+            MessageUtils.showMessageLog(MessageType.ERROR, "选择了错误的行号：{}", selectedRow);
+            return;
+        }
+
+        String identify = (String) tableModel.getValueAt(selectedRow, 0);
+        tableModel.removeRow(selectedRow);
+        TemplateService.getInstance().removeTemplate(identify);
     }
 
     public JPanel getRoot() {

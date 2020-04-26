@@ -26,12 +26,13 @@ public class EditTemplateForm {
     private final EditTemplateDialog editTemplateDialog;
     private final String selectTemplateName;
     private JPanel root;
-    private JTextField templateName;
+    private JTextField templateNameField;
     private JButton addPackageButton;
     private JButton addClassButton;
     private JButton editButton;
     private JButton deleteButton;
     private JTree templateNodeTree;
+    private JTextField descriptionField;
     /**
      * 模板的临时数据
      */
@@ -240,6 +241,8 @@ public class EditTemplateForm {
     }
 
     public Template getTemplate() {
+        template.setName(templateNameField.getText());
+        template.setDescription(descriptionField.getText());
         return template;
     }
 

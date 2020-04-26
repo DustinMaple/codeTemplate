@@ -1,8 +1,10 @@
 package cool.dustin.ui;
 
 import com.intellij.openapi.ui.DialogWrapper;
+import cool.dustin.datas.PluginRuntimeData;
 import cool.dustin.ui.forms.ConfigurationForm;
 import cool.dustin.ui.forms.EditTemplateForm;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -41,7 +43,16 @@ public class EditTemplateDialog extends DialogWrapper {
     @Override
     protected void doOKAction() {
         super.doOKAction();
+        saveTemplate();
         configurationForm.getCodeTemplateConfiguration().setModified(this.isChanged);
+    }
+
+    private void saveTemplate() {
+        if (StringUtils.isNotEmpty(selectTemplateName)) {
+            PluginRuntimeData.getInstance().removeTemplate(selectTemplateName);
+        }
+
+        PluginRuntimeData.getInstance().addTemplate(editTemplateForm.getTemplate());
     }
 
     public void changed() {
