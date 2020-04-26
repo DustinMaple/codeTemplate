@@ -4,7 +4,10 @@ import cool.dustin.constant.MessageType;
 import cool.dustin.datas.PluginRuntimeData;
 import cool.dustin.model.AbstractTemplateNode;
 import cool.dustin.model.Template;
+import cool.dustin.model.TemplateClass;
 import cool.dustin.model.TemplatePackage;
+import cool.dustin.ui.EditClassDialog;
+import cool.dustin.ui.EditPackageDialog;
 import cool.dustin.ui.EditTemplateDialog;
 import cool.dustin.util.MessageUtils;
 import org.apache.commons.lang.StringUtils;
@@ -23,13 +26,17 @@ public class EditTemplateForm {
     private final EditTemplateDialog editTemplateDialog;
     private final String selectTemplateName;
     private JPanel root;
-    private JTextField textField1;
-    private JButton createButton;
+    private JTextField templateName;
+    private JButton addPackageButton;
+    private JButton addClassButton;
     private JButton editButton;
     private JButton deleteButton;
     private JTree templateNodeTree;
-    private Set<String> packageName = new HashSet<>();
+    /**
+     * 模板的临时数据
+     */
     private Template template;
+    private Map<String, AbstractTemplateNode> nameToNodeMap = new HashMap<>();
 
     public EditTemplateForm(EditTemplateDialog editTemplateDialog, String selectTemplateName) {
         this.editTemplateDialog = editTemplateDialog;
@@ -40,65 +47,71 @@ public class EditTemplateForm {
     private void init() {
         findTemplate();
         initNodeTree();
-        createButton.addActionListener(e -> doCreate());
+        addPackageButton.addActionListener(e -> doAddPackage());
+        addClassButton.addActionListener(e -> doAddClass());
         editButton.addActionListener(e -> doEdit());
         deleteButton.addActionListener(e -> doDelete());
-
-//        //create the root node
-//        DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-//        //create the child nodes
-//        DefaultMutableTreeNode vegetableNode = new DefaultMutableTreeNode("Vegetables");
-//        DefaultMutableTreeNode fruitNode = new DefaultMutableTreeNode("Fruits");
-//        //add the child nodes to the root node
-//        root.add(vegetableNode);
-//        root.add(fruitNode);
-//
-//        TreeSelectionModel selectionModel = templateNodeTree.getSelectionModel();
-//        selectionModel.setSelectionMode(DISCONTIGUOUS_TREE_SELECTION);
-////        treePanel.(new JTree(root));
-//        templateNodeTree.setModel(new DefaultTreeModel(root));
-
     }
 
-    private void findTemplate() {
-        if (StringUtils.isNotEmpty(selectTemplateName)) {
-            Template oldTemplate = PluginRuntimeData.getInstance().getTemplate(selectTemplateName);
-            if (oldTemplate != null) {
-                this.template = (Template) oldTemplate.copy();
-                return;
-            }
-            MessageUtils.showMessageLog(MessageType.ERROR, "模板不存在：{}", selectTemplateName);
-        }
-        this.template = new Template();
-    }
-
-    private void doCreate() {
-        TreePath selectionPath = templateNodeTree.getSelectionPath();
-        Object[] path = selectionPath.getPath();
-        DefaultMutableTreeNode selecting = null;
-        if (path.length > 0) {
-            for (int i = path.length - 1; i >= 0; i--) {
-                selecting = (DefaultMutableTreeNode) path[i];
-                if (!selecting.isLeaf() || selecting.isRoot()) {
-                    // 没有子节点
-                    break;
-                }
-            }
-        }
-
-        if (selecting == null) {
-            System.out.println("找不到可用节点");
+    private void doAddPackage() {
+        DefaultMutableTreeNode selectNode = getSelectTreeNode();
+        if (selectNode == null) {
+            MessageUtils.showMessageLog(MessageType.INFO, "请先选中节点");
             return;
         }
 
-        DefaultTreeModel model = (DefaultTreeModel) templateNodeTree.getModel();
-        DefaultMutableTreeNode newNode = new DefaultMutableTreeNode("class");
-        model.insertNodeInto(newNode, selecting, 0);
-        model.reload();
+        AbstractTemplateNode parentTemplateNode = getParentTemplateNode(selectNode);
+        if (parentTemplateNode == null) {
+            MessageUtils.showMessageLog(MessageType.ERROR, "选中节点：{}，找不到可用的父节点", selectNode.getUserObject());
+            return;
+        }
+        new EditPackageDialog(editTemplateDialog, null, parentTemplateNode).showAndGet();
+    }
+
+    private void doAddClass() {
+        DefaultMutableTreeNode selectNode = getSelectTreeNode();
+        if (selectNode == null) {
+            MessageUtils.showMessageLog(MessageType.INFO, "请先选中节点");
+            return;
+        }
+
+        AbstractTemplateNode parentTemplateNode = getParentTemplateNode(selectNode);
+        if (parentTemplateNode == null) {
+            MessageUtils.showMessageLog(MessageType.ERROR, "选中节点：{}，找不到可用的父节点", selectNode.getUserObject());
+            return;
+        }
+
+        new EditClassDialog(editTemplateDialog, null, parentTemplateNode).showAndGet();
     }
 
     private void doEdit() {
+        DefaultMutableTreeNode selectNode = getSelectTreeNode();
+        if (selectNode == null) {
+            MessageUtils.showMessageLog(MessageType.INFO, "请先选中节点");
+            return;
+        }
 
+        // 根节点不可以编辑
+        String nodeName = (String) selectNode.getUserObject();
+        if (nodeName.equals(TEMPLATE_ROOT)) {
+            MessageUtils.showMessageLog(MessageType.ERROR, "不可以编辑根节点");
+            return;
+        }
+
+        AbstractTemplateNode parentTemplateNode = getParentTemplateNode(selectNode);
+        if (parentTemplateNode == null) {
+            MessageUtils.showMessageLog(MessageType.ERROR, "选中节点：{}，找不到可用的父节点", selectNode.getUserObject());
+            return;
+        }
+
+        AbstractTemplateNode templateNode = nameToNodeMap.get(nodeName);
+        if (templateNode instanceof TemplatePackage) {
+            new EditPackageDialog(editTemplateDialog, (TemplatePackage) templateNode, parentTemplateNode).showAndGet();
+        } else if (templateNode instanceof TemplateClass) {
+            new EditClassDialog(editTemplateDialog, (TemplateClass) templateNode, parentTemplateNode).showAndGet();
+        } else {
+            MessageUtils.showMessageLog(MessageType.ERROR, "不识别的类型：{}", templateNode.getClass());
+        }
     }
 
     private void doDelete() {
@@ -113,6 +126,46 @@ public class EditTemplateForm {
         }
 
         refreshTreeData();
+    }
+
+    /**
+     * 获取可以做父节点的模板节点
+     * @param selectTreeNode
+     * @return
+     */
+    private AbstractTemplateNode getParentTemplateNode(DefaultMutableTreeNode selectTreeNode) {
+        String selectName = (String) selectTreeNode.getUserObject();
+        if (selectName.equals(TEMPLATE_ROOT)) {
+            return template;
+        }
+
+        AbstractTemplateNode templateNode = nameToNodeMap.get(selectName);
+        if (templateNode instanceof TemplatePackage) {
+            return templateNode;
+        } else {
+            return getParentTemplateNode((DefaultMutableTreeNode) selectTreeNode.getParent());
+        }
+    }
+
+    private DefaultMutableTreeNode getSelectTreeNode() {
+        TreePath selectionPath = this.templateNodeTree.getSelectionPath();
+        if (selectionPath == null) {
+            return null;
+        }
+        return (DefaultMutableTreeNode) selectionPath.getLastPathComponent();
+    }
+
+    private void findTemplate() {
+        if (StringUtils.isNotEmpty(selectTemplateName)) {
+            Template oldTemplate = PluginRuntimeData.getInstance().getTemplate(selectTemplateName);
+            if (oldTemplate != null) {
+                this.template = (Template) oldTemplate.copy();
+                return;
+            }
+            MessageUtils.showMessageLog(MessageType.ERROR, "模板不存在：{}", selectTemplateName);
+        }
+        this.template = new Template();
+
     }
 
     private String getNodeValue(DefaultMutableTreeNode node) {
@@ -175,8 +228,8 @@ public class EditTemplateForm {
         for (AbstractTemplateNode child : list) {
             currentNode = new DefaultMutableTreeNode(child.getName());
             root.add(currentNode);
+            nameToNodeMap.put(child.getName(), child);
             if (child instanceof TemplatePackage) {
-                this.packageName.add(child.getName());
                 addChildNodes(currentNode, child);
             }
         }
@@ -190,4 +243,7 @@ public class EditTemplateForm {
         return template;
     }
 
+    public EditTemplateDialog getDialog() {
+        return editTemplateDialog;
+    }
 }
