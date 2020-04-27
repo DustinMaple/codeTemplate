@@ -1,8 +1,8 @@
 package cool.dustin.config;
 
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
+import cool.dustin.service.TemplateService;
 import cool.dustin.ui.forms.ConfigurationForm;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
@@ -46,8 +46,9 @@ public class CodeTemplateConfiguration implements Configurable {
     }
 
     @Override
-    public void apply() throws ConfigurationException {
+    public void apply() {
         System.out.println("save");
         modified = false;
+        TemplateService.getInstance().saveTemplates();
     }
 }

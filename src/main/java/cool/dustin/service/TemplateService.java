@@ -34,8 +34,7 @@ public interface TemplateService {
     void createSelectTemplate(Project project, PsiElement selectElement, String selectTemplate, String templateName);
 
     /**
-     * 删除模板
-     * @param identify
+     * 保存模板到配置文件
      */
-    void removeTemplate(String identify);
+    void saveTemplates();
 }

@@ -171,7 +171,8 @@ public class ConfigurationForm {
 
         String identify = (String) tableModel.getValueAt(selectedRow, 0);
         tableModel.removeRow(selectedRow);
-        TemplateService.getInstance().removeTemplate(identify);
+
+        PluginRuntimeData.getInstance().removeTemplate(identify);
     }
 
     public JPanel getRoot() {

@@ -13,7 +13,7 @@
         <!-- Add your extensions here -->
         <postStartupActivity implementation="cool.dustin.service.PluginInitializeService"/>
         <applicationService serviceInterface="cool.dustin.service.TemplateService"
-                            serviceImplementation="cool.dustin.service.impl.UseTemplateServiceImpl"/>
+                            serviceImplementation="cool.dustin.service.impl.TemplateServiceImpl"/>
         <projectConfigurable provider="cool.dustin.config.CodeTemplateConfigurationProvider" id="templateConfig"/>
     </extensions>
 

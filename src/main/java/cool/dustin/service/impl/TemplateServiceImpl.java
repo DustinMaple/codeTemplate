@@ -3,6 +3,7 @@ package cool.dustin.service.impl;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.file.PsiJavaDirectoryImpl;
+import cool.dustin.config.CodeTemplateState;
 import cool.dustin.constant.MessageDefine;
 import cool.dustin.datas.PluginRuntimeData;
 import cool.dustin.mock.PluginMock;
@@ -13,6 +14,7 @@ import cool.dustin.util.MessageUtils;
 import cool.dustin.xml.XmlUtils;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -20,7 +22,7 @@ import java.util.List;
  * @AUTHOR Dustin
  * @DATE 2020/04/15 20:29
  */
-public class UseTemplateServiceImpl implements TemplateService {
+public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public void loadTemplates(String configFilePath) {
@@ -60,8 +62,10 @@ public class UseTemplateServiceImpl implements TemplateService {
     }
 
     @Override
-    public void removeTemplate(String identify) {
-        System.out.println("删除模板：" + identify);
+    public void saveTemplates() {
+        Collection<Template> allTemplate = PluginRuntimeData.getInstance().getAllTemplate();
+        String path = CodeTemplateState.getInstance().getSetting().getTemplateXmlPath();
+        XmlUtils.writeToXml(allTemplate, path);
     }
 
     private void readTemplates(String templateXmlPath) {
