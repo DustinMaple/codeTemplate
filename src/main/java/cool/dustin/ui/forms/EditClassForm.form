@@ -59,7 +59,7 @@
         <properties/>
         <border type="none" title="ClassContent"/>
         <children>
-          <component id="4390" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+          <component id="4390" class="javax.swing.JTextArea" binding="classContentField" default-binding="true">
             <constraints/>
             <properties/>
           </component>

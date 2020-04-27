@@ -48,7 +48,7 @@ public class EditPackageDialog extends DialogWrapper {
     @Override
     protected JComponent createCenterPanel() {
         if (editPackageForm == null) {
-            editPackageForm = new EditPackageForm(parent.getName());
+            editPackageForm = new EditPackageForm(parent.getName(), selectPackage);
         }
         return editPackageForm.getRoot();
     }
