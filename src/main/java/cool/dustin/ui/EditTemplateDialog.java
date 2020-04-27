@@ -52,10 +52,11 @@ public class EditTemplateDialog extends DialogWrapper {
             PluginRuntimeData.getInstance().removeTemplate(selectTemplateName);
         }
 
-        PluginRuntimeData.getInstance().addTemplate(editTemplateForm.getTemplate());
+        PluginRuntimeData.getInstance().addTemplate(editTemplateForm.getTempTemplate());
     }
 
     public void changed() {
         this.isChanged = true;
+        this.editTemplateForm.refreshTreeData();
     }
 }

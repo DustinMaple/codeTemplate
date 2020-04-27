@@ -23,8 +23,7 @@ import static javax.swing.tree.TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION;
  */
 public class EditTemplateForm {
     private static final String TEMPLATE_ROOT = "TemplateRoot";
-    private final EditTemplateDialog editTemplateDialog;
-    private final String selectTemplateName;
+    //---------------------- 界面 -----------------------
     private JPanel root;
     private JTextField templateNameField;
     private JButton addPackageButton;
@@ -33,16 +32,31 @@ public class EditTemplateForm {
     private JButton deleteButton;
     private JTree templateNodeTree;
     private JTextField descriptionField;
+    //---------------------- 界面 -----------------------
     /**
      * 模板的临时数据
      */
-    private Template template;
+    private Template tempTemplate;
+    private final EditTemplateDialog editTemplateDialog;
+    private final String selectTemplateName;
     private Map<String, AbstractTemplateNode> nameToNodeMap = new HashMap<>();
 
     public EditTemplateForm(EditTemplateDialog editTemplateDialog, String selectTemplateName) {
         this.editTemplateDialog = editTemplateDialog;
         this.selectTemplateName = selectTemplateName;
         init();
+    }
+
+    public void refreshTreeData() {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(TEMPLATE_ROOT);
+        DefaultTreeModel treeModel = new DefaultTreeModel(root);
+
+        if (this.tempTemplate != null) {
+            addChildNodes((DefaultMutableTreeNode) treeModel.getRoot(), tempTemplate);
+        }
+
+        this.templateNodeTree.setModel(treeModel);
+        expandAll();
     }
 
     private void init() {
@@ -95,7 +109,6 @@ public class EditTemplateForm {
         // 根节点不可以编辑
         String nodeName = (String) selectNode.getUserObject();
         if (nodeName.equals(TEMPLATE_ROOT)) {
-            MessageUtils.showMessageLog(MessageType.ERROR, "不可以编辑根节点");
             return;
         }
 
@@ -123,7 +136,7 @@ public class EditTemplateForm {
 
         Object[] path = selectionPath.getPath();
         if (path.length > 0) {
-            template.removeNode(getNodeValue((DefaultMutableTreeNode) path[path.length - 1]));
+            tempTemplate.removeNode(getNodeValue((DefaultMutableTreeNode) path[path.length - 1]));
         }
 
         refreshTreeData();
@@ -137,7 +150,7 @@ public class EditTemplateForm {
     private AbstractTemplateNode getParentTemplateNode(DefaultMutableTreeNode selectTreeNode) {
         String selectName = (String) selectTreeNode.getUserObject();
         if (selectName.equals(TEMPLATE_ROOT)) {
-            return template;
+            return tempTemplate;
         }
 
         AbstractTemplateNode templateNode = nameToNodeMap.get(selectName);
@@ -160,12 +173,12 @@ public class EditTemplateForm {
         if (StringUtils.isNotEmpty(selectTemplateName)) {
             Template oldTemplate = PluginRuntimeData.getInstance().getTemplate(selectTemplateName);
             if (oldTemplate != null) {
-                this.template = (Template) oldTemplate.copy();
+                this.tempTemplate = (Template) oldTemplate.copy();
                 return;
             }
             MessageUtils.showMessageLog(MessageType.ERROR, "模板不存在：{}", selectTemplateName);
         }
-        this.template = new Template();
+        this.tempTemplate = new Template();
 
     }
 
@@ -176,18 +189,6 @@ public class EditTemplateForm {
     private void initNodeTree() {
         refreshTreeData();
         this.templateNodeTree.getSelectionModel().setSelectionMode(DISCONTIGUOUS_TREE_SELECTION);
-    }
-
-    private void refreshTreeData() {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(TEMPLATE_ROOT);
-        DefaultTreeModel treeModel = new DefaultTreeModel(root);
-
-        if (this.template != null) {
-            addChildNodes((DefaultMutableTreeNode) treeModel.getRoot(), template);
-        }
-
-        this.templateNodeTree.setModel(treeModel);
-        expandAll();
     }
 
     private void expandAll() {
@@ -240,10 +241,10 @@ public class EditTemplateForm {
         return root;
     }
 
-    public Template getTemplate() {
-        template.setName(templateNameField.getText());
-        template.setDescription(descriptionField.getText());
-        return template;
+    public Template getTempTemplate() {
+        tempTemplate.setName(templateNameField.getText());
+        tempTemplate.setDescription(descriptionField.getText());
+        return tempTemplate;
     }
 
     public EditTemplateDialog getDialog() {

@@ -1,7 +1,5 @@
 package cool.dustin.ui.forms;
 
-import cool.dustin.model.TemplatePackage;
-
 import javax.swing.*;
 
 /**
@@ -13,8 +11,6 @@ public class EditPackageForm {
     private JPanel root;
     private JTextField packageNameField;
     private JTextField parentNameField;
-
-    private TemplatePackage templatePackage = new TemplatePackage();
     private String parentName;
 
     public EditPackageForm(String parentName) {
@@ -32,7 +28,7 @@ public class EditPackageForm {
         return root;
     }
 
-    public TemplatePackage getTemplatePackage() {
-        return templatePackage;
+    public String getPackageName() {
+        return packageNameField.getText();
     }
 }
