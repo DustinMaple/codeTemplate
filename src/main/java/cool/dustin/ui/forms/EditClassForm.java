@@ -14,8 +14,9 @@ public class EditClassForm {
     private TemplateClass selectClass;
     private JPanel root;
     private JTextField parentNameField;
-    private JTextField classNameField;
+    private JTextField nodeNameField;
     private JTextArea classContentField;
+    private JTextField classNameField;
 
     private TemplateClass templateClass = new TemplateClass();
 
@@ -30,7 +31,8 @@ public class EditClassForm {
         parentNameField.setEditable(false);
 
         if (selectClass != null) {
-            this.classNameField.setText(selectClass.getName());
+            this.nodeNameField.setText(selectClass.getName());
+            this.classNameField.setText(selectClass.getClassName());
             this.classContentField.setText(selectClass.getContent());
         }
     }
@@ -43,11 +45,15 @@ public class EditClassForm {
         return templateClass;
     }
 
-    public String getClassName() {
-        return classNameField.getText();
+    public String getNodeName() {
+        return nodeNameField.getText();
     }
 
     public String getClassContent() {
         return classContentField.getText();
+    }
+
+    public String getClassName() {
+        return classNameField.getText();
     }
 }

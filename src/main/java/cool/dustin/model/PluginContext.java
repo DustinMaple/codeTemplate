@@ -9,22 +9,37 @@ public class PluginContext {
     /**
      * 模板名称
      */
-    private final String templateName;
+    private final String name;
     /**
      * 所选模板
      */
     private final String selectTemplate;
+    /**
+     * 模板名首字母大写
+     */
+    private final String capitalTemplateName;
 
     public PluginContext(String templateName, String selectTemplate) {
-        this.templateName = templateName;
+        this.name = templateName;
         this.selectTemplate = selectTemplate;
+
+        // 模板名首字母大写
+        char[] chars = templateName.toCharArray();
+        if (chars.length > 1 && chars[0] > 'Z') {
+            chars[0] = (char) (chars[0] - 32);
+        }
+        this.capitalTemplateName = String.valueOf(chars);
     }
 
-    public String getTemplateName() {
-        return templateName;
+    public String getName() {
+        return name;
     }
 
     public String getSelectTemplate() {
         return selectTemplate;
+    }
+
+    public String getCapitalTemplateName() {
+        return capitalTemplateName;
     }
 }

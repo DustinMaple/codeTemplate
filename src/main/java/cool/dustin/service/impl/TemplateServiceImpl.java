@@ -38,7 +38,7 @@ public class TemplateServiceImpl implements TemplateService {
 
     @Override
     public void createSelectTemplate(Project project, PsiElement selectElement, String selectTemplate, String templateName) {
-        PluginContext context = new PluginContext(selectTemplate, templateName);
+        PluginContext context = new PluginContext(templateName, selectTemplate);
 
         // 找到目录元素，因为用户选中的元素可能是一个类
         PsiElement rootElement = selectElement;

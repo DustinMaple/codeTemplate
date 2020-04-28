@@ -46,6 +46,13 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
 
     }
 
+    /**
+     * 创建自身的psi元素
+     * @param project 所处项目
+     * @param context 插件上下文
+     * @param parentElement 父级psi元素
+     * @return
+     */
     protected abstract PsiElement createSelfPsiElement(Project project, PluginContext context, PsiElement parentElement);
 
     @Override

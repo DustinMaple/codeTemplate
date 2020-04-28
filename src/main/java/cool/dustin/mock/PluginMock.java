@@ -1,5 +1,6 @@
 package cool.dustin.mock;
 
+import cool.dustin.constant.TemplateParam;
 import cool.dustin.datas.PluginRuntimeData;
 import cool.dustin.model.Template;
 import cool.dustin.model.TemplateClass;
@@ -30,16 +31,18 @@ public class PluginMock {
         serviceImplPackage.setName("impl");
 
         TemplateClass templateClass1 = new TemplateClass();
-        templateClass1.setName("WingService");
-        templateClass1.setContent("public interface WingService {\n" +
+        templateClass1.setName("serviceInterface");
+        String classNameParam = TemplateParam.HUMP_NAME.getExpression();
+        templateClass1.setClassName(classNameParam + "Service");
+        templateClass1.setContent("public interface " + classNameParam + "Service {\n" +
                 "\tvoid init();\n\n\tvoid shutdown();\n" +
                 "}");
 
-        String[] importClazz = new String[]{"WingService", "ToolUtils"};
+        String[] importClazz = new String[]{"ToolUtils"};
         TemplateClass templateClass2 = new TemplateClass();
-        templateClass2.setName("WingServiceImpl");
-        templateClass2.setImportClass(importClazz);
-        templateClass2.setContent("public class WingServiceImpl implements WingService{\n" +
+        templateClass2.setName("serviceImpl");
+        templateClass2.setClassName(classNameParam + "ServiceImpl");
+        templateClass2.setContent("public class " + classNameParam + "ServiceImpl implements " + classNameParam + "Service{\n" +
                 "\tpublic void init(){\n\t\t\n\t}\n\n\tpublic void shutdown(){\n\t\t\n\t}\n" +
                 "}");
 

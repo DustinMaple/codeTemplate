@@ -11,6 +11,7 @@ import com.intellij.psi.search.PsiShortNamesCache;
  * @DATE 2020/04/20 18:38
  */
 public class PsiUtils {
+
     /**
      * 根据类的简短名查找类的PsiClass实例
      * @param simpleName 类名
