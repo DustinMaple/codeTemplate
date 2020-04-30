@@ -37,9 +37,7 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     @Override
-    public void createSelectTemplate(Project project, PsiElement selectElement, String selectTemplate, String templateName) {
-        PluginContext context = new PluginContext(templateName, selectTemplate);
-
+    public void createSelectTemplate(Project project, PsiElement selectElement, PluginContext context) {
         // 找到目录元素，因为用户选中的元素可能是一个类
         PsiElement rootElement = selectElement;
 
@@ -52,7 +50,7 @@ public class TemplateServiceImpl implements TemplateService {
             return;
         }
 
-        Template template = PluginRuntimeData.getInstance().getTemplate(selectTemplate);
+        Template template = PluginRuntimeData.getInstance().getTemplate(context.getSelectTemplate());
         if (template == null) {
             MessageUtils.showMessage(MessageDefine.TEMPLATE_NOT_EXIST);
             return;

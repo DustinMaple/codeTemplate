@@ -9,7 +9,7 @@ public class PluginContext {
     /**
      * 模板名称
      */
-    private final String name;
+    private final String systemName;
     /**
      * 所选模板
      */
@@ -17,29 +17,32 @@ public class PluginContext {
     /**
      * 模板名首字母大写
      */
-    private final String capitalTemplateName;
+    private final String humpName;
+    /**
+     * 下划线分割系统名
+     */
+    private final String lineName;
 
-    public PluginContext(String templateName, String selectTemplate) {
-        this.name = templateName;
+    public PluginContext(String selectTemplate, String systemName, String humpName, String lineName) {
         this.selectTemplate = selectTemplate;
-
-        // 模板名首字母大写
-        char[] chars = templateName.toCharArray();
-        if (chars.length > 1 && chars[0] > 'Z') {
-            chars[0] = (char) (chars[0] - 32);
-        }
-        this.capitalTemplateName = String.valueOf(chars);
+        this.systemName = systemName;
+        this.humpName = humpName;
+        this.lineName = lineName;
     }
 
-    public String getName() {
-        return name;
+    public String getSystemName() {
+        return systemName;
     }
 
     public String getSelectTemplate() {
         return selectTemplate;
     }
 
-    public String getCapitalTemplateName() {
-        return capitalTemplateName;
+    public String getHumpName() {
+        return humpName;
+    }
+
+    public String getLineName() {
+        return lineName;
     }
 }

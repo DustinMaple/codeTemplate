@@ -82,8 +82,9 @@ public class TemplateClass extends AbstractTemplateNode {
      * @return
      */
     private String putInParam(PluginContext context, String str) {
-        str = TemplateParam.TEMPLATE_PARAM.putInParam(str, context.getName());
-        str = TemplateParam.HUMP_NAME.putInParam(str, context.getCapitalTemplateName());
+        str = TemplateParam.TEMPLATE_PARAM.putInParam(str, context.getSystemName());
+        str = TemplateParam.HUMP_NAME.putInParam(str, context.getHumpName());
+        str = TemplateParam.LINE_NAME.putInParam(str, context.getLineName());
 
         return str;
     }

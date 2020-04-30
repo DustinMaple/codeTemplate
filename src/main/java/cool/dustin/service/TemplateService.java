@@ -3,6 +3,7 @@ package cool.dustin.service;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import cool.dustin.model.PluginContext;
 
 /**
  * 应用模板的服务接口
@@ -28,10 +29,9 @@ public interface TemplateService {
      * 使用模板创建所有元素
      * @param project 项目实例
      * @param selectElement 选中的元素
-     * @param selectTemplate 选择的模板
-     * @param templateName 模块名称
+     * @param context 使用模板上下文
      */
-    void createSelectTemplate(Project project, PsiElement selectElement, String selectTemplate, String templateName);
+    void createSelectTemplate(Project project, PsiElement selectElement, PluginContext context);
 
     /**
      * 保存模板到配置文件

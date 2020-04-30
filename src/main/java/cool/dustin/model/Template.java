@@ -37,7 +37,7 @@ public class Template extends AbstractTemplateNode {
         PsiDirectoryFactory dirFactory = PsiDirectoryFactory.getInstance(project);
         PsiDirectory directory = dirFactory.createDirectory(((PsiJavaDirectoryImpl) parentElement).getVirtualFile());
 
-        return WriteCommandAction.runWriteCommandAction(project, (Computable<PsiDirectory>) () -> directory.createSubdirectory(context.getName()));
+        return WriteCommandAction.runWriteCommandAction(project, (Computable<PsiDirectory>) () -> directory.createSubdirectory(context.getSystemName()));
     }
 
     public String getDescription() {
