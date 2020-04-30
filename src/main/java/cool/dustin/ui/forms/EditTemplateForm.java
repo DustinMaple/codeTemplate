@@ -61,6 +61,9 @@ public class EditTemplateForm {
 
     private void init() {
         findTemplate();
+        this.templateNameField.setText(this.tempTemplate.getName());
+        this.descriptionField.setText(this.tempTemplate.getDescription());
+
         initNodeTree();
         addPackageButton.addActionListener(e -> doAddPackage());
         addClassButton.addActionListener(e -> doAddClass());
@@ -179,7 +182,6 @@ public class EditTemplateForm {
             MessageUtils.showMessageLog(MessageType.ERROR, "模板不存在：{}", selectTemplateName);
         }
         this.tempTemplate = new Template();
-
     }
 
     private String getNodeValue(DefaultMutableTreeNode node) {

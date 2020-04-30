@@ -67,10 +67,13 @@ public class EditClassDialog extends DialogWrapper {
             return;
         }
 
-        TemplateClass templateClass = new TemplateClass();
-        templateClass.setName(nodeName);
-        templateClass.setContent(classContent);
-        parent.addChild(templateClass);
+        if (this.selectClass == null) {
+            this.selectClass = new TemplateClass();
+            parent.addChild(this.selectClass);
+        }
+
+        this.selectClass.setName(nodeName);
+        this.selectClass.setContent(classContent);
 
         templateDialog.changed();
         super.doOKAction();
