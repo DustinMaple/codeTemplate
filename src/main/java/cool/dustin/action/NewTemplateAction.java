@@ -19,10 +19,6 @@ public class NewTemplateAction extends AnAction {
         // popup use template
         Project project = e.getProject();
         PsiElement selectElement = e.getData(CommonDataKeys.PSI_ELEMENT);
-//        new NewTemplateForm().show();
         new CreateModuleDialog(project, selectElement).showAndGet();
-
-        // test
-//        UseTemplateService.getInstance().useSelectTemplate(project, data, MOCK_TEMPLATE_NAME, "wing");
     }
 }
