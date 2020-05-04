@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,7 +40,7 @@ public class XmlUtils {
     public static List<Template> readTemplatesWithXml(String filePath) {
         File file = new File(filePath);
         if (!file.exists() || file.isDirectory()) {
-            throw new RuntimeException("配置文件不存在");
+            return Collections.emptyList();
         }
 
         Element element = parseXML(file);
