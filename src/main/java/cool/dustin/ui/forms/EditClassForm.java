@@ -1,5 +1,6 @@
 package cool.dustin.ui.forms;
 
+import cool.dustin.constant.TemplateParam;
 import cool.dustin.model.TemplateClass;
 
 import javax.swing.*;
@@ -17,6 +18,7 @@ public class EditClassForm {
     private JTextField nodeNameField;
     private JTextArea classContentField;
     private JTextField classNameField;
+    private JTextPane description;
 
     private TemplateClass templateClass = new TemplateClass();
 
@@ -35,6 +37,9 @@ public class EditClassForm {
             this.classNameField.setText(selectClass.getClassName());
             this.classContentField.setText(selectClass.getContent());
         }
+
+
+        description.setText("参数只有在类名和类的内容中有效，以下为可用参数\n" + TemplateParam.getDescription());
     }
 
     public JPanel getRoot() {
