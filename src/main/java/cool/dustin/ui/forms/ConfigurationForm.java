@@ -57,6 +57,7 @@ public class ConfigurationForm {
      * 模板表格，展示模板名和模板描述
      */
     private JTable templatesTable;
+    private JTextField authorField;
     /**
      * 表格模型
      */
@@ -85,11 +86,26 @@ public class ConfigurationForm {
 
     private void init() {
         initConfigFilePath();
+        initAuthor();
         selectButton.addActionListener((event) -> doSelectFile());
         createButton.addActionListener((event) -> doCreate());
         editButton.addActionListener((event) -> doEdit());
         deleteButton.addActionListener((event) -> doDelete());
         initTable();
+    }
+
+    private void initAuthor() {
+        String author = CodeTemplateState.getInstance().getSetting().getAuthor();
+        if (StringUtils.isNotEmpty(author)) {
+            authorField.setText(author);
+        }
+
+        authorField.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                codeTemplateConfiguration.setModified(true);
+            }
+        });
     }
 
     private void initConfigFilePath() {
@@ -180,6 +196,8 @@ public class ConfigurationForm {
         tableModel.removeRow(selectedRow);
 
         PluginRuntimeData.getInstance().removeTemplate(identify);
+
+        codeTemplateConfiguration.setModified(true);
     }
 
     public JPanel getRoot() {
@@ -192,5 +210,9 @@ public class ConfigurationForm {
 
     public String getConfigFilePath() {
         return configFilePathField.getText();
+    }
+
+    public String getAuthor() {
+        return authorField.getText();
     }
 }

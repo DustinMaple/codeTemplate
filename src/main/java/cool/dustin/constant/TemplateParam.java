@@ -21,7 +21,16 @@ public enum TemplateParam {
     /**
      * 下划线形式
      */
-    LINE_NAME("@LINE_NAME@", "模块名下划线形式", "equip_level_up");
+    LINE_NAME("@LINE_NAME@", "模块名下划线形式", "equip_level_up"),
+    /**
+     * 日期
+     */
+    DATE("@DATE@", "日期", "2020-01-01 00:00"),
+    /**
+     * 作者
+     */
+    AUTHOR("@AUTHOR@", "作者"),
+    ;
 
     private final String expression;
     private final Pattern pattern;
@@ -53,6 +62,9 @@ public enum TemplateParam {
     }
 
     public String putInParam(String targetStr, String paramStr) {
+        if (StringUtils.isEmpty(targetStr)) {
+            return targetStr;
+        }
         return pattern.matcher(targetStr).replaceAll(paramStr);
     }
 

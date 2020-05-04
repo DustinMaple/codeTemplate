@@ -67,5 +67,6 @@ public class TemplateServiceImpl implements TemplateService {
     private void readTemplates(String templateXmlPath) {
         List<Template> templates = XmlUtils.readTemplatesWithXml(templateXmlPath);
         PluginRuntimeData.getInstance().addTemplates(templates);
+//        PluginMock.mockTemplate();
     }
 }

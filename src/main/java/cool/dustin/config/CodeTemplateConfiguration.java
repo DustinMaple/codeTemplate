@@ -2,6 +2,7 @@ package cool.dustin.config;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
+import cool.dustin.model.PluginSetting;
 import cool.dustin.service.TemplateService;
 import cool.dustin.ui.forms.ConfigurationForm;
 import org.jetbrains.annotations.Nls;
@@ -48,7 +49,9 @@ public class CodeTemplateConfiguration implements Configurable {
     @Override
     public void apply() {
         modified = false;
-        CodeTemplateState.getInstance().getSetting().setTemplateXmlPath(form.getConfigFilePath());
+        PluginSetting setting = CodeTemplateState.getInstance().getSetting();
+        setting.setTemplateXmlPath(form.getConfigFilePath());
+        setting.setAuthor(form.getAuthor());
         TemplateService.getInstance().saveTemplates();
     }
 }

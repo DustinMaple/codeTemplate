@@ -143,6 +143,8 @@ public class EditTemplateForm {
         }
 
         refreshTreeData();
+
+        this.editTemplateDialog.changed();
     }
 
     /**
@@ -249,7 +251,4 @@ public class EditTemplateForm {
         return tempTemplate;
     }
 
-    public EditTemplateDialog getDialog() {
-        return editTemplateDialog;
-    }
 }

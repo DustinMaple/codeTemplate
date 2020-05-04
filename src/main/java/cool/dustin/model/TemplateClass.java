@@ -8,6 +8,7 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
+import cool.dustin.config.CodeTemplateState;
 import cool.dustin.constant.TemplateClassType;
 import cool.dustin.constant.TemplateParam;
 import cool.dustin.util.JavaLanguageUtil;
@@ -15,10 +16,8 @@ import cool.dustin.util.PsiUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 类模板
@@ -26,6 +25,7 @@ import java.util.Set;
  * @DATE 2020/4/14 14:46
  */
 public class TemplateClass extends AbstractTemplateNode {
+    public static SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     /**
      * 类名
      */
@@ -90,6 +90,8 @@ public class TemplateClass extends AbstractTemplateNode {
         str = TemplateParam.TEMPLATE_PARAM.putInParam(str, context.getSystemName());
         str = TemplateParam.HUMP_NAME.putInParam(str, context.getHumpName());
         str = TemplateParam.LINE_NAME.putInParam(str, context.getLineName());
+        str = TemplateParam.DATE.putInParam(str, format.format(new Date()));
+        str = TemplateParam.AUTHOR.putInParam(str, CodeTemplateState.getInstance().getSetting().getAuthor());
 
         return str;
     }

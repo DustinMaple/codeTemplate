@@ -55,7 +55,8 @@ public class EditClassDialog extends DialogWrapper {
     @Override
     protected void doOKAction() {
         // 根据form构建TemplatePackage，添加到parent中
-        String nodeName = editClassForm.getNodeName();
+        String nodeName = editClassForm.getNodeName(), className = editClassForm.getClassName();
+
         if (StringUtils.isEmpty(nodeName)) {
             MessageUtils.showMessageLog(MessageType.ERROR, "类名不能为空");
             return;
@@ -73,6 +74,7 @@ public class EditClassDialog extends DialogWrapper {
         }
 
         this.selectClass.setName(nodeName);
+        this.selectClass.setClassName(className);
         this.selectClass.setContent(classContent);
 
         templateDialog.changed();
