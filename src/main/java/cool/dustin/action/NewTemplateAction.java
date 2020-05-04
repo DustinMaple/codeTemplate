@@ -5,7 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import cool.dustin.ui.NewTemplateDialog;
+import cool.dustin.ui.CreateModuleDialog;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,7 +20,7 @@ public class NewTemplateAction extends AnAction {
         Project project = e.getProject();
         PsiElement selectElement = e.getData(CommonDataKeys.PSI_ELEMENT);
 //        new NewTemplateForm().show();
-        new NewTemplateDialog(project, selectElement).showAndGet();
+        new CreateModuleDialog(project, selectElement).showAndGet();
 
         // test
 //        UseTemplateService.getInstance().useSelectTemplate(project, data, MOCK_TEMPLATE_NAME, "wing");

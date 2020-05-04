@@ -15,7 +15,7 @@ import java.util.Collection;
  * @AUTHOR Dustin
  * @DATE 2020/04/20 16:19
  */
-public class NewTemplateForm {
+public class CreateModuleForm {
     private JPanel root;
     private JTextField systemNameField;
     private JComboBox<String> selectTemplate;
@@ -26,7 +26,7 @@ public class NewTemplateForm {
     private String humpName = "";
     private String lineName = "";
 
-    public NewTemplateForm() {
+    public CreateModuleForm() {
         init();
     }
 

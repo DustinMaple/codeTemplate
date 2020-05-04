@@ -5,7 +5,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.PsiElement;
 import cool.dustin.model.PluginContext;
 import cool.dustin.service.TemplateService;
-import cool.dustin.ui.forms.NewTemplateForm;
+import cool.dustin.ui.forms.CreateModuleForm;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ import javax.swing.*;
  * @AUTHOR Dustin
  * @DATE 2020/04/20 15:25
  */
-public class NewTemplateDialog extends DialogWrapper {
+public class CreateModuleDialog extends DialogWrapper {
     /**
      * 调用的项目
      */
@@ -24,9 +24,9 @@ public class NewTemplateDialog extends DialogWrapper {
      * 选中的PSI元素
      */
     private PsiElement selectElement;
-    private NewTemplateForm form = new NewTemplateForm();
+    private CreateModuleForm form = new CreateModuleForm();
 
-    public NewTemplateDialog(@Nullable Project project, PsiElement selectElement) {
+    public CreateModuleDialog(@Nullable Project project, PsiElement selectElement) {
         super(project, true);
         this.project = project;
         this.selectElement = selectElement;
