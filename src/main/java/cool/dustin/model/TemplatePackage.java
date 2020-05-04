@@ -7,6 +7,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.psi.impl.file.PsiJavaDirectoryImpl;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 模板的包
@@ -41,5 +42,13 @@ public class TemplatePackage extends AbstractTemplateNode {
     @Override
     public AbstractTemplateNode copy() {
         return new TemplatePackage(this);
+    }
+
+    @Override
+    public int compareTo(@NotNull AbstractTemplateNode o) {
+        if (o instanceof TemplatePackage) {
+            return 0;
+        }
+        return -1;
     }
 }

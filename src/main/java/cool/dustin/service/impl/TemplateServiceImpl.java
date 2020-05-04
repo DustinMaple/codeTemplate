@@ -6,7 +6,6 @@ import com.intellij.psi.impl.file.PsiJavaDirectoryImpl;
 import cool.dustin.config.CodeTemplateState;
 import cool.dustin.constant.MessageDefine;
 import cool.dustin.datas.PluginRuntimeData;
-import cool.dustin.mock.PluginMock;
 import cool.dustin.model.PluginContext;
 import cool.dustin.model.Template;
 import cool.dustin.service.TemplateService;
@@ -31,7 +30,6 @@ public class TemplateServiceImpl implements TemplateService {
             return;
         }
 
-        System.out.println("读取配置文件：" + configFilePath);
         // 从模板文件中读取所有模板
         readTemplates(configFilePath);
     }
@@ -69,6 +67,5 @@ public class TemplateServiceImpl implements TemplateService {
     private void readTemplates(String templateXmlPath) {
         List<Template> templates = XmlUtils.readTemplatesWithXml(templateXmlPath);
         PluginRuntimeData.getInstance().addTemplates(templates);
-        PluginMock.mockTemplate();
     }
 }

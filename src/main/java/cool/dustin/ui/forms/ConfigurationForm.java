@@ -5,6 +5,7 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.DocumentAdapter;
 import cool.dustin.config.CodeTemplateConfiguration;
 import cool.dustin.config.CodeTemplateState;
 import cool.dustin.constant.MessageType;
@@ -13,8 +14,10 @@ import cool.dustin.service.TemplateService;
 import cool.dustin.ui.EditTemplateDialog;
 import cool.dustin.util.MessageUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.util.Enumeration;
@@ -33,7 +36,7 @@ public class ConfigurationForm {
     /**
      * 配置文件路径输入框
      */
-    private JTextField configFilePath;
+    private JTextField configFilePathField;
     /**
      * 选择配置文件按钮
      */
@@ -90,25 +93,30 @@ public class ConfigurationForm {
     }
 
     private void initConfigFilePath() {
-        configFilePath.setEditable(false);
         String path = CodeTemplateState.getInstance().getSetting().getTemplateXmlPath();
         if (StringUtils.isNotEmpty(path)) {
-            configFilePath.setText(path);
+            configFilePathField.setText(path);
         }
+
+        configFilePathField.getDocument().addDocumentListener(new DocumentAdapter() {
+            @Override
+            protected void textChanged(@NotNull DocumentEvent e) {
+                codeTemplateConfiguration.setModified(true);
+            }
+        });
     }
 
     private void doSelectFile() {
         VirtualFile selectFile = openFile();
 
         if (selectFile == null || selectFile.isDirectory()) {
-            System.out.println("请选择正确的文件");
             return;
         }
 
         String path = selectFile.getPath();
         System.out.println(path);
 
-        configFilePath.setText(path);
+        configFilePathField.setText(path);
         CodeTemplateState.getInstance().getSetting().setTemplateXmlPath(path);
         TemplateService.getInstance().loadTemplates(path);
         refreshTableData();
@@ -157,7 +165,6 @@ public class ConfigurationForm {
         }
 
         String identify = (String) templatesTable.getValueAt(selectedRow, 0);
-        System.out.println("selectName:" + identify);
 
         new EditTemplateDialog(this, identify).showAndGet();
     }
@@ -181,5 +188,9 @@ public class ConfigurationForm {
 
     public CodeTemplateConfiguration getCodeTemplateConfiguration() {
         return codeTemplateConfiguration;
+    }
+
+    public String getConfigFilePath() {
+        return configFilePathField.getText();
     }
 }

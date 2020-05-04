@@ -38,7 +38,6 @@ public class PluginMock {
                 "\tvoid init();\n\n\tvoid shutdown();\n" +
                 "}");
 
-        String[] importClazz = new String[]{"ToolUtils"};
         TemplateClass templateClass2 = new TemplateClass();
         templateClass2.setName("serviceImpl");
         templateClass2.setClassName(classNameParam + "ServiceImpl");

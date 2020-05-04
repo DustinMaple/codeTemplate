@@ -4,10 +4,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.sun.istack.NotNull;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -15,7 +12,7 @@ import java.util.function.Consumer;
  * @AUTHOR Dustin
  * @DATE 2020/04/13 20:50
  */
-public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateNode>, TemplateElement, Copyable<AbstractTemplateNode> {
+public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateNode>, TemplateElement, Copyable<AbstractTemplateNode>, Comparable<AbstractTemplateNode> {
     /**
      * 元素名称
      */
@@ -40,6 +37,9 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
     public final void generatePsi(Project project, PluginContext context, @NotNull PsiElement parentElement) {
         // 自己在父元素下生成自身的psiElement
         PsiElement psiElement = createSelfPsiElement(project, context, parentElement);
+
+        List<AbstractTemplateNode> list = new ArrayList<>(children);
+        Collections.sort(list);
 
         // 遍历所有子节点，将自己作为父节点，让子节点创建psiElement
         children.forEach(child -> child.generatePsi(project, context, psiElement));
@@ -113,4 +113,5 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
 
         return removed;
     }
+
 }

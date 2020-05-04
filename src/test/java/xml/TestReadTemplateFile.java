@@ -1,5 +1,6 @@
 package xml;
 
+import cool.dustin.xml.XmlUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -49,10 +50,7 @@ public class TestReadTemplateFile {
     }
 
     private void parseElement(Element element) {
-        String name = element.getName();
-        String text = element.getText();
         List<Element> children = element.getChildren();
-        System.out.println("name:" + name + ", text:" + text + ", childrenSize:" + children.size());
 
         for (Element child : children) {
             parseElement(child);
@@ -73,11 +71,10 @@ public class TestReadTemplateFile {
 
     private File createDefaultFile() {
         File file = new File(filePath);
-        Element root = new Element(XmlFileConstant.ELEMENT_ROOT);
-        Element clazz = new Element(XmlFileConstant.ELEMENT_CLASS);
-        clazz.setAttribute(XmlFileConstant.ATTR_NAME, "WingService");
+        Element root = new Element(XmlUtils.ELEMENT_ROOT);
+        Element clazz = new Element(XmlUtils.ELEMENT_CLASS);
+        clazz.setAttribute(XmlUtils.ATTR_NAME, "WingService");
         clazz.setText("public interface WingService{\\n\\t\\n}\\n");
-        System.out.println(clazz.getText());
         root.addContent(clazz);
         Document document = new Document(root);
         Format format = Format.getCompactFormat();

@@ -7,6 +7,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.psi.impl.file.PsiJavaDirectoryImpl;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 代码模板，可以直接用于创建一批包和代码
@@ -51,5 +52,10 @@ public class Template extends AbstractTemplateNode {
     @Override
     public AbstractTemplateNode copy() {
         return new Template(this);
+    }
+
+    @Override
+    public int compareTo(@NotNull AbstractTemplateNode o) {
+        return 0;
     }
 }

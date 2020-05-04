@@ -47,8 +47,8 @@ public class CodeTemplateConfiguration implements Configurable {
 
     @Override
     public void apply() {
-        System.out.println("save");
         modified = false;
+        CodeTemplateState.getInstance().getSetting().setTemplateXmlPath(form.getConfigFilePath());
         TemplateService.getInstance().saveTemplates();
     }
 }

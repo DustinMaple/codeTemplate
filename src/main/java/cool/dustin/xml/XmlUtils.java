@@ -38,12 +38,20 @@ public class XmlUtils {
      * @return
      */
     public static List<Template> readTemplatesWithXml(String filePath) {
+        if (!filePath.contains("xml")) {
+            return Collections.emptyList();
+        }
+
         File file = new File(filePath);
         if (!file.exists() || file.isDirectory()) {
             return Collections.emptyList();
         }
 
         Element element = parseXML(file);
+        if (!element.getName().equals(ELEMENT_ROOT)) {
+            return Collections.emptyList();
+        }
+
         List<Element> children = element.getChildren();
         List<Template> result = new ArrayList<>(children.size());
 

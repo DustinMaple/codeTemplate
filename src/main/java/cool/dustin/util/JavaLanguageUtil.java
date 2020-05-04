@@ -37,12 +37,4 @@ public class JavaLanguageUtil {
 
         return result;
     }
-
-//    public static void main(String[] args) {
-//        String str = "public class Equip extends Item, Container implements Copyable{}";
-//        List<String> strings = JavaLanguageUtil.analysisImports(str);
-//        for(String s : strings){
-//            System.out.println(s);
-//        }
-//    }
 }

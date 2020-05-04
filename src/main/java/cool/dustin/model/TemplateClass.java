@@ -8,10 +8,12 @@ import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
+import cool.dustin.constant.TemplateClassType;
 import cool.dustin.constant.TemplateParam;
 import cool.dustin.util.JavaLanguageUtil;
 import cool.dustin.util.PsiUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -34,6 +36,8 @@ public class TemplateClass extends AbstractTemplateNode {
      */
     private String content;
 
+    private TemplateClassType type = TemplateClassType.CLASS;
+
     public TemplateClass() {
 
     }
@@ -42,6 +46,7 @@ public class TemplateClass extends AbstractTemplateNode {
         this.setName(templateClass.getName());
         this.setClassName(templateClass.getClassName());
         this.setContent(templateClass.getContent());
+        this.setType(templateClass.getType());
     }
 
 
@@ -115,6 +120,13 @@ public class TemplateClass extends AbstractTemplateNode {
 
     public void setContent(String content) {
         this.content = content;
+        analysisType();
+    }
+
+    private void analysisType() {
+        if (this.content.contains("interface")) {
+            this.type = TemplateClassType.INTERFACE;
+        }
     }
 
     public String getClassName() {
@@ -125,8 +137,29 @@ public class TemplateClass extends AbstractTemplateNode {
         this.className = className;
     }
 
+    public TemplateClassType getType() {
+        return type;
+    }
+
+    public void setType(TemplateClassType type) {
+        this.type = type;
+    }
+
     @Override
     public AbstractTemplateNode copy() {
         return new TemplateClass(this);
+    }
+
+    @Override
+    public int compareTo(@NotNull AbstractTemplateNode o) {
+        if (o instanceof TemplatePackage) {
+            return 1;
+        }
+
+        if (o instanceof TemplateClass) {
+            return Integer.compare(this.type.ordinal(), ((TemplateClass) o).type.ordinal());
+        }
+
+        return 0;
     }
 }

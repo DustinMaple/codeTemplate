@@ -5,9 +5,6 @@ import cool.dustin.constant.MessageDefine;
 import cool.dustin.constant.MessageType;
 import cool.dustin.datas.PluginRuntimeData;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * 处理各种需要反馈给用户的消息
  * @AUTHOR Dustin
@@ -48,11 +45,4 @@ public class MessageUtils {
         type.notice(project, logStr);
     }
 
-    public static void main(String[] args) {
-        String str = "$111$";
-        Pattern compile = Pattern.compile("\\" + str + "\\\\");
-        Matcher matcher = compile.matcher("hello " + str);
-        String result = matcher.replaceAll("aaa");
-        System.out.println(result);
-    }
 }
