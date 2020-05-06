@@ -14,6 +14,14 @@ import java.util.function.Consumer;
  */
 public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateNode>, TemplateElement, Copyable<AbstractTemplateNode>, Comparable<AbstractTemplateNode> {
     /**
+     * 基础id，用于支持同一个template
+     */
+    private static int BASE_ID = 0;
+    /**
+     * 模板唯一id
+     */
+    private int id;
+    /**
      * 元素名称
      */
     private String name;
@@ -21,6 +29,10 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
      * 所有子节点
      */
     private Set<AbstractTemplateNode> children = new HashSet<>();
+
+    public AbstractTemplateNode() {
+        this.id = BASE_ID++;
+    }
 
     @Override
     public void addChild(AbstractTemplateNode node) {
@@ -79,6 +91,10 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Set<AbstractTemplateNode> getChildren() {

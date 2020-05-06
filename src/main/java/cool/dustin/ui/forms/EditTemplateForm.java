@@ -39,7 +39,7 @@ public class EditTemplateForm {
     private Template tempTemplate;
     private final EditTemplateDialog editTemplateDialog;
     private final String selectTemplateName;
-    private Map<String, AbstractTemplateNode> nameToNodeMap = new HashMap<>();
+    private Map<Integer, AbstractTemplateNode> nameToNodeMap = new HashMap<>();
 
     public EditTemplateForm(EditTemplateDialog editTemplateDialog, String selectTemplateName) {
         this.editTemplateDialog = editTemplateDialog;
@@ -48,7 +48,7 @@ public class EditTemplateForm {
     }
 
     public void refreshTreeData() {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(TEMPLATE_ROOT);
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(TemplateNodeTreeNode.ROOT);
         DefaultTreeModel treeModel = new DefaultTreeModel(root);
 
         if (this.tempTemplate != null) {
@@ -110,8 +110,8 @@ public class EditTemplateForm {
         }
 
         // 根节点不可以编辑
-        String nodeName = (String) selectNode.getUserObject();
-        if (nodeName.equals(TEMPLATE_ROOT)) {
+        TemplateNodeTreeNode nodeName = (TemplateNodeTreeNode) selectNode.getUserObject();
+        if (nodeName.getName().equals(TEMPLATE_ROOT)) {
             return;
         }
 
@@ -121,7 +121,7 @@ public class EditTemplateForm {
             return;
         }
 
-        AbstractTemplateNode templateNode = nameToNodeMap.get(nodeName);
+        AbstractTemplateNode templateNode = nameToNodeMap.get(nodeName.getId());
         if (templateNode instanceof TemplatePackage) {
             new EditPackageDialog(editTemplateDialog, (TemplatePackage) templateNode, parentTemplateNode).showAndGet();
         } else if (templateNode instanceof TemplateClass) {
@@ -139,7 +139,8 @@ public class EditTemplateForm {
 
         Object[] path = selectionPath.getPath();
         if (path.length > 0) {
-            tempTemplate.removeNode(getNodeValue((DefaultMutableTreeNode) path[path.length - 1]));
+            TemplateNodeTreeNode nodeValue = getNodeValue((DefaultMutableTreeNode) path[path.length - 1]);
+            tempTemplate.removeNode(nodeValue.getName());
         }
 
         refreshTreeData();
@@ -153,12 +154,12 @@ public class EditTemplateForm {
      * @return
      */
     private AbstractTemplateNode getParentTemplateNode(DefaultMutableTreeNode selectTreeNode) {
-        String selectName = (String) selectTreeNode.getUserObject();
-        if (selectName.equals(TEMPLATE_ROOT)) {
+        TemplateNodeTreeNode selectName = (TemplateNodeTreeNode) selectTreeNode.getUserObject();
+        if (selectName.getName().equals(TEMPLATE_ROOT)) {
             return tempTemplate;
         }
 
-        AbstractTemplateNode templateNode = nameToNodeMap.get(selectName);
+        AbstractTemplateNode templateNode = nameToNodeMap.get(selectName.getId());
         if (templateNode instanceof TemplatePackage) {
             return templateNode;
         } else {
@@ -186,8 +187,8 @@ public class EditTemplateForm {
         this.tempTemplate = new Template();
     }
 
-    private String getNodeValue(DefaultMutableTreeNode node) {
-        return (String) node.getUserObject();
+    private TemplateNodeTreeNode getNodeValue(DefaultMutableTreeNode node) {
+        return (TemplateNodeTreeNode) node.getUserObject();
     }
 
     private void initNodeTree() {
@@ -232,9 +233,9 @@ public class EditTemplateForm {
         });
 
         for (AbstractTemplateNode child : list) {
-            currentNode = new DefaultMutableTreeNode(child.getName());
+            currentNode = new DefaultMutableTreeNode(new TemplateNodeTreeNode(child.getId(), child.getName()));
             root.add(currentNode);
-            nameToNodeMap.put(child.getName(), child);
+            nameToNodeMap.put(child.getId(), child);
             if (child instanceof TemplatePackage) {
                 addChildNodes(currentNode, child);
             }
@@ -251,4 +252,28 @@ public class EditTemplateForm {
         return tempTemplate;
     }
 
+    static class TemplateNodeTreeNode {
+        private static TemplateNodeTreeNode ROOT = new TemplateNodeTreeNode(-1, TEMPLATE_ROOT);
+
+        private int id;
+        private String name;
+
+        public TemplateNodeTreeNode(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 }
