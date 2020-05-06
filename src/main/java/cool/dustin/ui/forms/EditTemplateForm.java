@@ -48,7 +48,7 @@ public class EditTemplateForm {
     }
 
     public void refreshTreeData() {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(TemplateNodeTreeNode.ROOT);
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode(TreeNodeData.ROOT);
         DefaultTreeModel treeModel = new DefaultTreeModel(root);
 
         if (this.tempTemplate != null) {
@@ -110,8 +110,8 @@ public class EditTemplateForm {
         }
 
         // 根节点不可以编辑
-        TemplateNodeTreeNode nodeName = (TemplateNodeTreeNode) selectNode.getUserObject();
-        if (nodeName.getName().equals(TEMPLATE_ROOT)) {
+        TreeNodeData nodeData = (TreeNodeData) selectNode.getUserObject();
+        if (nodeData.getName().equals(TEMPLATE_ROOT)) {
             return;
         }
 
@@ -121,7 +121,7 @@ public class EditTemplateForm {
             return;
         }
 
-        AbstractTemplateNode templateNode = nameToNodeMap.get(nodeName.getId());
+        AbstractTemplateNode templateNode = nameToNodeMap.get(nodeData.getId());
         if (templateNode instanceof TemplatePackage) {
             new EditPackageDialog(editTemplateDialog, (TemplatePackage) templateNode, parentTemplateNode).showAndGet();
         } else if (templateNode instanceof TemplateClass) {
@@ -139,7 +139,7 @@ public class EditTemplateForm {
 
         Object[] path = selectionPath.getPath();
         if (path.length > 0) {
-            TemplateNodeTreeNode nodeValue = getNodeValue((DefaultMutableTreeNode) path[path.length - 1]);
+            TreeNodeData nodeValue = getNodeValue((DefaultMutableTreeNode) path[path.length - 1]);
             tempTemplate.removeNode(nodeValue.getName());
         }
 
@@ -154,12 +154,15 @@ public class EditTemplateForm {
      * @return
      */
     private AbstractTemplateNode getParentTemplateNode(DefaultMutableTreeNode selectTreeNode) {
-        TemplateNodeTreeNode selectName = (TemplateNodeTreeNode) selectTreeNode.getUserObject();
-        if (selectName.getName().equals(TEMPLATE_ROOT)) {
+        TreeNodeData selectNodeData = (TreeNodeData) selectTreeNode.getUserObject();
+        if (selectNodeData.getName().equals(TEMPLATE_ROOT)) {
             return tempTemplate;
         }
 
-        AbstractTemplateNode templateNode = nameToNodeMap.get(selectName.getId());
+        DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectTreeNode.getParent();
+        selectNodeData = (TreeNodeData) parent.getUserObject();
+        AbstractTemplateNode templateNode = nameToNodeMap.get(selectNodeData.getId());
+
         if (templateNode instanceof TemplatePackage) {
             return templateNode;
         } else {
@@ -187,8 +190,8 @@ public class EditTemplateForm {
         this.tempTemplate = new Template();
     }
 
-    private TemplateNodeTreeNode getNodeValue(DefaultMutableTreeNode node) {
-        return (TemplateNodeTreeNode) node.getUserObject();
+    private TreeNodeData getNodeValue(DefaultMutableTreeNode node) {
+        return (TreeNodeData) node.getUserObject();
     }
 
     private void initNodeTree() {
@@ -233,7 +236,7 @@ public class EditTemplateForm {
         });
 
         for (AbstractTemplateNode child : list) {
-            currentNode = new DefaultMutableTreeNode(new TemplateNodeTreeNode(child.getId(), child.getName()));
+            currentNode = new DefaultMutableTreeNode(new TreeNodeData(child.getId(), child.getName()));
             root.add(currentNode);
             nameToNodeMap.put(child.getId(), child);
             if (child instanceof TemplatePackage) {
@@ -252,13 +255,13 @@ public class EditTemplateForm {
         return tempTemplate;
     }
 
-    static class TemplateNodeTreeNode {
-        private static TemplateNodeTreeNode ROOT = new TemplateNodeTreeNode(-1, TEMPLATE_ROOT);
+    static class TreeNodeData {
+        private static TreeNodeData ROOT = new TreeNodeData(-1, TEMPLATE_ROOT);
 
         private int id;
         private String name;
 
-        public TemplateNodeTreeNode(int id, String name) {
+        public TreeNodeData(int id, String name) {
             this.id = id;
             this.name = name;
         }
