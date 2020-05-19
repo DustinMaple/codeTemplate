@@ -8,6 +8,9 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
+    <!-- Add this depends for use Java psi elements.Get the detail from this url. -->
+    <!-- https://blog.jetbrains.com/platform/2019/06/java-functionality-extracted-as-a-plugin/?_ga=2.241837378.1527350544.1589808715-1439724925.1583314990 -->
+    <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
