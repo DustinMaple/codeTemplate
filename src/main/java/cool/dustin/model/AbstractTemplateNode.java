@@ -49,12 +49,15 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
     public final void generatePsi(Project project, PluginContext context, @NotNull PsiElement parentElement) {
         // 自己在父元素下生成自身的psiElement
         PsiElement psiElement = createSelfPsiElement(project, context, parentElement);
+        if (psiElement == null) {
+            return;
+        }
 
         List<AbstractTemplateNode> list = new ArrayList<>(children);
         Collections.sort(list);
 
         // 遍历所有子节点，将自己作为父节点，让子节点创建psiElement
-        children.forEach(child -> child.generatePsi(project, context, psiElement));
+        list.forEach(child -> child.generatePsi(project, context, psiElement));
 
     }
 
