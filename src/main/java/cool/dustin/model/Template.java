@@ -7,6 +7,7 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.psi.impl.file.PsiJavaDirectoryImpl;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -33,6 +34,10 @@ public class Template extends AbstractTemplateNode {
     protected PsiElement createSelfPsiElement(Project project, PluginContext context, PsiElement parentElement) {
         if (!(parentElement instanceof PsiJavaDirectoryImpl)) {
             throw new RuntimeException("创建模板错误，parentElement参数不是一个目录");
+        }
+
+        if (StringUtils.isEmpty(context.getSystemName())) {
+            return null;
         }
 
         PsiDirectoryFactory dirFactory = PsiDirectoryFactory.getInstance(project);

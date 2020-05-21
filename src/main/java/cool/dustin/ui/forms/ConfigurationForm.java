@@ -57,6 +57,9 @@ public class ConfigurationForm {
      * 模板表格，展示模板名和模板描述
      */
     private JTable templatesTable;
+    /**
+     * 作者输入框
+     */
     private JTextField authorField;
     /**
      * 表格模型
@@ -130,8 +133,6 @@ public class ConfigurationForm {
         }
 
         String path = selectFile.getPath();
-        System.out.println(path);
-
         configFilePathField.setText(path);
         CodeTemplateState.getInstance().getSetting().setTemplateXmlPath(path);
         TemplateService.getInstance().loadTemplates(path);

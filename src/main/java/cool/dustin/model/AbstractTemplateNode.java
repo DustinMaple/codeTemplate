@@ -29,6 +29,10 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
      * 所有子节点
      */
     private Set<AbstractTemplateNode> children = new HashSet<>();
+    /**
+     * 包路径
+     */
+    private String referencePath = "";
 
     public AbstractTemplateNode() {
         this.id = BASE_ID++;
@@ -37,6 +41,7 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
     @Override
     public void addChild(AbstractTemplateNode node) {
         children.add(node);
+        node.referencePath = this.referencePath + "." + node.getName();
     }
 
     @Override

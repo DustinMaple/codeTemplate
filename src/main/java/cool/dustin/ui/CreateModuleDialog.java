@@ -1,7 +1,9 @@
 package cool.dustin.ui;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import cool.dustin.model.PluginContext;
 import cool.dustin.service.TemplateService;
@@ -48,6 +50,9 @@ public class CreateModuleDialog extends DialogWrapper {
     @Override
     protected void doOKAction() {
         PluginContext context = new PluginContext(form.getSelectTemplate(), form.getSystemName(), form.getHumpName(), form.getLineName());
+        for (VirtualFile vf : ProjectRootManager.getInstance(project).getContentSourceRoots()) {
+            context.getProjectRootPath().add(vf.getPath());
+        }
         TemplateService.getInstance().createSelectTemplate(project, selectElement, context);
         super.doOKAction();
     }

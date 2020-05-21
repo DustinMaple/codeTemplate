@@ -18,6 +18,10 @@ public class NewTemplateAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent e) {
         // popup use template
         Project project = e.getProject();
+        if (project == null) {
+            return;
+        }
+
         PsiElement selectElement = e.getData(CommonDataKeys.PSI_ELEMENT);
         new CreateModuleDialog(project, selectElement).showAndGet();
     }

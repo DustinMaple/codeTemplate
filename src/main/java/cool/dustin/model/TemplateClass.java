@@ -113,6 +113,7 @@ public class TemplateClass extends AbstractTemplateNode {
                 importClasses.add(classesByName[0]);
             }
         }
+
         return importClasses;
     }
 

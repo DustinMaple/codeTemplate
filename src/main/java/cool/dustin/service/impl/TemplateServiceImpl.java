@@ -38,13 +38,18 @@ public class TemplateServiceImpl implements TemplateService {
     public void createSelectTemplate(Project project, PsiElement selectElement, PluginContext context) {
         // 找到目录元素，因为用户选中的元素可能是一个类
         PsiElement rootElement = selectElement;
-
         while (!(selectElement instanceof PsiJavaDirectoryImpl) && rootElement != null) {
             rootElement = rootElement.getParent();
         }
 
         if (rootElement == null) {
             MessageUtils.showMessage(MessageDefine.DIRECTORY_ERROR);
+            return;
+        }
+
+
+        String selectPackage = analysisSelectPackage(((PsiJavaDirectoryImpl) rootElement).getVirtualFile().getPath(), context.getProjectRootPath());
+        if (StringUtils.isEmpty(selectPackage)) {
             return;
         }
 
@@ -55,6 +60,18 @@ public class TemplateServiceImpl implements TemplateService {
         }
 
         template.generatePsi(project, context, rootElement);
+    }
+
+    private String analysisSelectPackage(String selectPath, List<String> rootPathList) {
+        if (StringUtils.isEmpty(selectPath)) {
+            return null;
+        }
+
+        for (String rootPath : rootPathList) {
+            selectPath = selectPath.replaceAll(rootPath, "");
+        }
+
+        return selectPath.replaceFirst("/", "").replaceAll("/", ".");
     }
 
     @Override

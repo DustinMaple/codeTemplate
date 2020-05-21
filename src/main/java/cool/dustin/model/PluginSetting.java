@@ -14,6 +14,10 @@ public class PluginSetting {
      * 作者
      */
     private String author = "";
+    /**
+     * 源代码路径
+     */
+    private String sourceRootPath = "";
 
     public String getTemplateXmlPath() {
         return templateXmlPath;
@@ -29,5 +33,13 @@ public class PluginSetting {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getSourceRootPath() {
+        return sourceRootPath;
+    }
+
+    public void setSourceRootPath(String sourceRootPath) {
+        this.sourceRootPath = sourceRootPath;
     }
 }
