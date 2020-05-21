@@ -31,16 +31,14 @@ public class PluginMock {
         serviceImplPackage.setName("impl");
 
         TemplateClass templateClass1 = new TemplateClass();
-        templateClass1.setName("serviceInterface");
         String classNameParam = TemplateParam.HUMP_NAME.getExpression();
-        templateClass1.setClassName(classNameParam + "Service");
+        templateClass1.setName(classNameParam + "Service");
         templateClass1.setContent("public interface " + classNameParam + "Service {\n" +
                 "\tvoid init();\n\n\tvoid shutdown();\n" +
                 "}");
 
         TemplateClass templateClass2 = new TemplateClass();
-        templateClass2.setName("serviceImpl");
-        templateClass2.setClassName(classNameParam + "ServiceImpl");
+        templateClass2.setName(classNameParam + "ServiceImpl");
         templateClass2.setContent("public class " + classNameParam + "ServiceImpl implements " + classNameParam + "Service{\n" +
                 "\tpublic void init(){\n\t\t\n\t}\n\n\tpublic void shutdown(){\n\t\t\n\t}\n" +
                 "}");

@@ -30,7 +30,6 @@ public class XmlUtils {
     public static final String ELEMENT_CLASS = "class";
     public static final String ELEMENT_PACKAGE = "package";
     public static final String ATTR_NAME = "name";
-    public static final String ATTR_CLASS_NAME = "className";
     public static final String ATTR_DESC = "desc";
 
     /**
@@ -140,7 +139,6 @@ public class XmlUtils {
     private static AbstractTemplateNode parseClass(Element child) {
         TemplateClass templateClass = new TemplateClass();
         templateClass.setName(child.getAttributeValue(ATTR_NAME));
-        templateClass.setClassName(child.getAttributeValue(ATTR_CLASS_NAME));
         templateClass.setContent(child.getText());
         return templateClass;
     }
@@ -217,7 +215,6 @@ public class XmlUtils {
     private static Element buildClassElement(TemplateClass node) {
         Element element = new Element(ELEMENT_CLASS);
         element.setAttribute(ATTR_NAME, node.getName());
-        element.setAttribute(ATTR_CLASS_NAME, node.getClassName());
         element.setText(node.getContent());
         return element;
     }

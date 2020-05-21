@@ -27,11 +27,6 @@ import java.util.*;
 public class TemplateClass extends AbstractTemplateNode {
     public static SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     /**
-     * 类名
-     */
-    private String className;
-
-    /**
      * 内容
      */
     private String content;
@@ -44,7 +39,6 @@ public class TemplateClass extends AbstractTemplateNode {
 
     public TemplateClass(TemplateClass templateClass) {
         this.setName(templateClass.getName());
-        this.setClassName(templateClass.getClassName());
         this.setContent(templateClass.getContent());
         this.setType(templateClass.getType());
     }
@@ -55,7 +49,7 @@ public class TemplateClass extends AbstractTemplateNode {
         String classContent, className;
         classContent = putInParam(context, this.content);
         classContent = insertImport(project, context, classContent);
-        className = putInParam(context, this.className);
+        className = putInParam(context, this.getName());
 
         PsiFile file = PsiFileFactory.getInstance(project).createFileFromText(className + "." + JavaFileType.INSTANCE.getDefaultExtension(), JavaFileType.INSTANCE, classContent);
         return WriteCommandAction.runWriteCommandAction(project, (Computable<PsiElement>) () -> parentElement.add(file));
@@ -132,13 +126,6 @@ public class TemplateClass extends AbstractTemplateNode {
         }
     }
 
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
 
     public TemplateClassType getType() {
         return type;

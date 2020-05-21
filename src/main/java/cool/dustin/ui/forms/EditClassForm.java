@@ -11,15 +11,38 @@ import javax.swing.*;
  * @DATE 2020/04/23 16:41
  */
 public class EditClassForm {
-    private final String parentName;
-    private TemplateClass selectClass;
-    private JPanel root;
-    private JTextField parentNameField;
-    private JTextField nodeNameField;
-    private JTextArea classContentField;
-    private JTextField classNameField;
-    private JTextPane description;
 
+    //---------------------- UI Element start -----------------------
+    /**
+     * 上级界面
+     */
+    private JPanel root;
+    /**
+     * 上级节点名称
+     */
+    private JTextField parentNameField;
+    /**
+     * 名称自读那
+     */
+    private JTextField nameField;
+    /**
+     * 类内容字段
+     */
+    private JTextArea classContentField;
+    /**
+     * 类描述字段
+     */
+    private JTextPane description;
+    /**
+     * 引入字段
+     */
+    private JTextField importsField;
+    //---------------------- UI Element end -------------------------
+    /**
+     * 选中的类
+     */
+    private TemplateClass selectClass;
+    private final String parentName;
     private TemplateClass templateClass = new TemplateClass();
 
     public EditClassForm(String parentName, TemplateClass selectClass) {
@@ -33,8 +56,7 @@ public class EditClassForm {
         parentNameField.setEditable(false);
 
         if (selectClass != null) {
-            this.nodeNameField.setText(selectClass.getName());
-            this.classNameField.setText(selectClass.getClassName());
+            this.nameField.setText(selectClass.getName());
             this.classContentField.setText(selectClass.getContent());
         }
 
@@ -46,19 +68,11 @@ public class EditClassForm {
         return root;
     }
 
-    public TemplateClass getTemplateClass() {
-        return templateClass;
-    }
-
-    public String getNodeName() {
-        return nodeNameField.getText();
-    }
-
     public String getClassContent() {
         return classContentField.getText();
     }
 
     public String getClassName() {
-        return classNameField.getText();
+        return nameField.getText();
     }
 }
