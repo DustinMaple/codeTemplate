@@ -63,6 +63,7 @@ public class EditPackageDialog extends DialogWrapper {
 
         TemplatePackage templatePackage = new TemplatePackage();
         templatePackage.setName(packageName);
+        templatePackage.setReferencePath(parent.getReferencePath() + "." + packageName);
         parent.addChild(templatePackage);
 
         templateDialog.changed();

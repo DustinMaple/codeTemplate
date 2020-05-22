@@ -1,9 +1,15 @@
 package cool.dustin.ui.forms;
 
+import cool.dustin.constant.TemplateConstants;
 import cool.dustin.constant.TemplateParam;
 import cool.dustin.model.TemplateClass;
+import cool.dustin.util.JavaLanguageUtil;
+import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -57,9 +63,9 @@ public class EditClassForm {
 
         if (selectClass != null) {
             this.nameField.setText(selectClass.getName());
+            this.importsField.setText(JavaLanguageUtil.noSquareBrackets(selectClass.getImportClass().toString()));
             this.classContentField.setText(selectClass.getContent());
         }
-
 
         description.setText("参数只有在类名和类的内容中有效，以下为可用参数\n" + TemplateParam.getDescription());
     }
@@ -74,5 +80,12 @@ public class EditClassForm {
 
     public String getClassName() {
         return nameField.getText();
+    }
+
+    public List<String> getImportClass() {
+        if (StringUtils.isEmpty(importsField.getText())) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(importsField.getText().split(TemplateConstants.STRING_LIST_SPLIT));
     }
 }

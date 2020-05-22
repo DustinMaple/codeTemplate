@@ -4,7 +4,6 @@ import com.intellij.ide.highlighter.JavaFileType;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
-import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
@@ -12,12 +11,13 @@ import cool.dustin.config.CodeTemplateState;
 import cool.dustin.constant.TemplateClassType;
 import cool.dustin.constant.TemplateParam;
 import cool.dustin.util.JavaLanguageUtil;
-import cool.dustin.util.PsiUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 类模板
@@ -30,7 +30,13 @@ public class TemplateClass extends AbstractTemplateNode {
      * 内容
      */
     private String content;
-
+    /**
+     * 需要引入的类
+     */
+    private List<String> importClass = Collections.emptyList();
+    /**
+     * java类型
+     */
     private TemplateClassType type = TemplateClassType.CLASS;
 
     public TemplateClass() {
@@ -38,101 +44,10 @@ public class TemplateClass extends AbstractTemplateNode {
     }
 
     public TemplateClass(TemplateClass templateClass) {
-        this.setName(templateClass.getName());
-        this.setContent(templateClass.getContent());
-        this.setType(templateClass.getType());
-    }
-
-
-    @Override
-    protected PsiElement createSelfPsiElement(Project project, PluginContext context, PsiElement parentElement) {
-        String classContent, className;
-        classContent = putInParam(context, this.content);
-        classContent = insertImport(project, context, classContent);
-        className = putInParam(context, this.getName());
-
-        PsiFile file = PsiFileFactory.getInstance(project).createFileFromText(className + "." + JavaFileType.INSTANCE.getDefaultExtension(), JavaFileType.INSTANCE, classContent);
-        return WriteCommandAction.runWriteCommandAction(project, (Computable<PsiElement>) () -> parentElement.add(file));
-    }
-
-    /**
-     * 插入import内容
-     * @param project
-     * @param context
-     * @param classContent
-     * @return
-     */
-    private String insertImport(Project project, PluginContext context, String classContent) {
-        StringBuilder importInfo = new StringBuilder();
-        Collection<PsiClass> importClasses = findImportClasses(project, context, classContent);
-
-        if (importClasses != null) {
-            importClasses.forEach(psiClazz -> importInfo.append("import ").append(psiClazz.getQualifiedName()).append(";\n"));
-        }
-
-        classContent = importInfo.toString() + "\n\n" + classContent;
-        return classContent;
-    }
-
-    /**
-     * 放入参数
-     * @param context
-     * @param str
-     * @return
-     */
-    private String putInParam(PluginContext context, String str) {
-        str = TemplateParam.TEMPLATE_PARAM.putInParam(str, context.getSystemName());
-        str = TemplateParam.HUMP_NAME.putInParam(str, context.getHumpName());
-        str = TemplateParam.LINE_NAME.putInParam(str, context.getLineName());
-        str = TemplateParam.DATE.putInParam(str, format.format(new Date()));
-        str = TemplateParam.AUTHOR.putInParam(str, CodeTemplateState.getInstance().getSetting().getAuthor());
-
-        return str;
-    }
-
-    private Collection<PsiClass> findImportClasses(Project project, PluginContext context, String classContent) {
-        List<String> importClassNameList = JavaLanguageUtil.analysisImports(classContent);
-
-        if (CollectionUtils.isEmpty(importClassNameList)) {
-            return null;
-        }
-
-        Set<PsiClass> importClasses = new HashSet<>();
-        PsiClass[] classesByName;
-        for (String clazzName : importClassNameList) {
-            clazzName = putInParam(context, clazzName);
-
-            classesByName = PsiUtils.findClass(clazzName, project);
-            if (classesByName.length > 0) {
-                importClasses.add(classesByName[0]);
-            }
-        }
-
-        return importClasses;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-        analysisType();
-    }
-
-    private void analysisType() {
-        if (this.content.contains("interface")) {
-            this.type = TemplateClassType.INTERFACE;
-        }
-    }
-
-
-    public TemplateClassType getType() {
-        return type;
-    }
-
-    public void setType(TemplateClassType type) {
-        this.type = type;
+        super(templateClass);
+        this.type = templateClass.type;
+        this.content = templateClass.content;
+        this.importClass = new ArrayList<>(templateClass.importClass);
     }
 
     @Override
@@ -152,4 +67,90 @@ public class TemplateClass extends AbstractTemplateNode {
 
         return 0;
     }
+
+    @Override
+    public PsiElement createSelfPsiElement(Project project, PluginContext context, PsiElement parentElement, Template template) {
+        String classContent, className;
+        classContent = insertImport(this.content, template, context.getSelectPackage());
+        classContent = putInParam(context, classContent);
+        className = putInParam(context, this.getName());
+
+        PsiFile file = PsiFileFactory.getInstance(project).createFileFromText(className + "." + JavaFileType.INSTANCE.getDefaultExtension(), JavaFileType.INSTANCE, classContent);
+        return WriteCommandAction.runWriteCommandAction(project, (Computable<PsiElement>) () -> parentElement.add(file));
+    }
+
+    /**
+     * 插入import内容
+     * @param classContent
+     * @param template
+     * @param selectPackage
+     * @return
+     */
+    private String insertImport(String classContent, Template template, String selectPackage) {
+        StringBuilder importInfo = new StringBuilder();
+        TemplateClass importClass;
+
+        for (String className : this.importClass) {
+            importClass = template.findTemplateClassByName(className.trim());
+            if (importClass == null) {
+                continue;
+            }
+
+            importInfo.append(JavaLanguageUtil.JAVA_IMPORT).append(" ").append(selectPackage).append(importClass.getReferencePath()).append(";\n");
+        }
+
+        classContent = importInfo.toString() + "\n\n" + classContent;
+        return classContent;
+    }
+
+    /**
+     * 放入参数
+     * @param context
+     * @param str
+     * @return
+     */
+    private String putInParam(PluginContext context, String str) {
+        str = TemplateParam.MODULE_NAME.putInParam(str, context.getSystemName());
+        str = TemplateParam.HUMP_NAME.putInParam(str, context.getHumpName());
+        str = TemplateParam.LINE_NAME.putInParam(str, context.getLineName());
+        str = TemplateParam.DATE.putInParam(str, format.format(new Date()));
+        str = TemplateParam.AUTHOR.putInParam(str, CodeTemplateState.getInstance().getSetting().getAuthor());
+
+        return str;
+    }
+
+    /**
+     * 分析java代码时接口还是类
+     */
+    private void analysisType() {
+        if (this.content.contains(JavaLanguageUtil.JAVA_INTERFACE)) {
+            this.type = TemplateClassType.INTERFACE;
+        }
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+        analysisType();
+    }
+
+    public TemplateClassType getType() {
+        return type;
+    }
+
+    public void setType(TemplateClassType type) {
+        this.type = type;
+    }
+
+    public List<String> getImportClass() {
+        return importClass;
+    }
+
+    public void setImportClass(List<String> importClass) {
+        this.importClass = importClass;
+    }
+
 }

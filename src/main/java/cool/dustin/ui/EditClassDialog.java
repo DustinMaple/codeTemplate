@@ -3,6 +3,7 @@ package cool.dustin.ui;
 import com.intellij.openapi.ui.DialogWrapper;
 import cool.dustin.constant.MessageType;
 import cool.dustin.model.AbstractTemplateNode;
+import cool.dustin.model.Template;
 import cool.dustin.model.TemplateClass;
 import cool.dustin.ui.forms.EditClassForm;
 import cool.dustin.util.MessageUtils;
@@ -17,6 +18,7 @@ import javax.swing.*;
  * @DATE 2020/04/22 11:28
  */
 public class EditClassDialog extends DialogWrapper {
+    private final Template template;
     /**
      * 界面
      */
@@ -34,11 +36,12 @@ public class EditClassDialog extends DialogWrapper {
      */
     private AbstractTemplateNode parent;
 
-    public EditClassDialog(EditTemplateDialog templateDialog, TemplateClass selectClass, AbstractTemplateNode parent) {
+    public EditClassDialog(EditTemplateDialog templateDialog, TemplateClass selectClass, AbstractTemplateNode parent, Template template) {
         super(true);
         this.templateDialog = templateDialog;
         this.selectClass = selectClass;
         this.parent = parent;
+        this.template = template;
         init();
         setTitle("Edit Class");
     }
@@ -69,14 +72,22 @@ public class EditClassDialog extends DialogWrapper {
         }
 
         if (this.selectClass == null) {
+            TemplateClass templateClassByName = template.findTemplateClassByName(className);
+            if (templateClassByName != null) {
+                MessageUtils.showMessageLog(MessageType.ERROR, "类名不能重复");
+                return;
+            }
+
             this.selectClass = new TemplateClass();
             this.selectClass.setName(className);
+            this.selectClass.setReferencePath(parent.getReferencePath() + "." + className);
             parent.addChild(this.selectClass);
         } else {
             this.selectClass.setName(className);
         }
 
         this.selectClass.setContent(classContent);
+        this.selectClass.setImportClass(editClassForm.getImportClass());
 
         templateDialog.changed();
         super.doOKAction();

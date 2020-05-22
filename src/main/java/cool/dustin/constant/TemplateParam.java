@@ -13,7 +13,7 @@ public enum TemplateParam {
     /**
      * 模板名参数
      */
-    TEMPLATE_PARAM("@MODULE_NAME@", "模块名"),
+    MODULE_NAME("@MODULE_NAME@", "模块名"),
     /**
      * 驼峰形式
      */

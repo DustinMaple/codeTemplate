@@ -2,9 +2,11 @@ package cool.dustin.model;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
-import com.sun.istack.NotNull;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -38,10 +40,19 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
         this.id = BASE_ID++;
     }
 
+    public AbstractTemplateNode(AbstractTemplateNode node) {
+        this.id = node.id;
+        this.name = node.name;
+        this.children = new HashSet<>(node.children.size());
+        for (AbstractTemplateNode child : node.children) {
+            this.children.add(child.copy());
+        }
+        this.referencePath = node.referencePath;
+    }
+
     @Override
     public void addChild(AbstractTemplateNode node) {
         children.add(node);
-        node.referencePath = this.referencePath + "." + node.getName();
     }
 
     @Override
@@ -50,30 +61,15 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
         children.forEach(node -> node.recursive(consumer));
     }
 
-    @Override
-    public final void generatePsi(Project project, PluginContext context, @NotNull PsiElement parentElement) {
-        // 自己在父元素下生成自身的psiElement
-        PsiElement psiElement = createSelfPsiElement(project, context, parentElement);
-        if (psiElement == null) {
-            return;
-        }
-
-        List<AbstractTemplateNode> list = new ArrayList<>(children);
-        Collections.sort(list);
-
-        // 遍历所有子节点，将自己作为父节点，让子节点创建psiElement
-        list.forEach(child -> child.generatePsi(project, context, psiElement));
-
-    }
-
     /**
      * 创建自身的psi元素
      * @param project 所处项目
      * @param context 插件上下文
      * @param parentElement 父级psi元素
+     * @param template
      * @return
      */
-    protected abstract PsiElement createSelfPsiElement(Project project, PluginContext context, PsiElement parentElement);
+    public abstract PsiElement createSelfPsiElement(Project project, PluginContext context, PsiElement parentElement, Template template);
 
     @Override
     public boolean equals(Object o) {
@@ -138,4 +134,11 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
         return removed;
     }
 
+    public String getReferencePath() {
+        return referencePath;
+    }
+
+    public void setReferencePath(String referencePath) {
+        this.referencePath = referencePath;
+    }
 }

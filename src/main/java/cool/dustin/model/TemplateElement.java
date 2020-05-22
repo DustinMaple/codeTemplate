@@ -1,8 +1,5 @@
 package cool.dustin.model;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-
 /**
  * 代码模板的元素
  * @AUTHOR Dustin
@@ -14,12 +11,4 @@ public interface TemplateElement {
      * @return
      */
     String getName();
-
-    /**
-     * 创建PSI文件
-     * @param project
-     * @param context
-     * @param parentElement
-     */
-    void generatePsi(Project project, PluginContext context, PsiElement parentElement);
 }

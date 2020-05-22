@@ -1,9 +1,13 @@
 package cool.dustin.xml;
 
+import cool.dustin.constant.TemplateConstants;
+import cool.dustin.constant.TemplateParam;
 import cool.dustin.model.AbstractTemplateNode;
 import cool.dustin.model.Template;
 import cool.dustin.model.TemplateClass;
 import cool.dustin.model.TemplatePackage;
+import cool.dustin.util.JavaLanguageUtil;
+import org.apache.commons.lang.StringUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -14,10 +18,7 @@ import org.jdom2.output.XMLOutputter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -29,8 +30,10 @@ public class XmlUtils {
     public static final String ELEMENT_TEMPLATE = "template";
     public static final String ELEMENT_CLASS = "class";
     public static final String ELEMENT_PACKAGE = "package";
+    public static final String ATTR_IMPORT = "importClass";
     public static final String ATTR_NAME = "name";
     public static final String ATTR_DESC = "desc";
+    public static final String XML_FILE_SUFFIX = "xml";
 
     /**
      * 从指定的配置文件中读取模板配置
@@ -38,7 +41,7 @@ public class XmlUtils {
      * @return
      */
     public static List<Template> readTemplatesWithXml(String filePath) {
-        if (!filePath.contains("xml")) {
+        if (!filePath.contains(XML_FILE_SUFFIX)) {
             return Collections.emptyList();
         }
 
@@ -57,7 +60,7 @@ public class XmlUtils {
 
         for (Element templateElement : children) {
             if (ELEMENT_TEMPLATE.equals(templateElement.getName())) {
-                result.add((Template) parseNode(templateElement));
+                result.add((Template) parseNode(templateElement, ""));
             }
         }
 
@@ -85,8 +88,13 @@ public class XmlUtils {
         }
     }
 
-
-    private static AbstractTemplateNode parseNode(Element element) {
+    /**
+     * 解析XML文件节点
+     * @param element
+     * @param parentReferencePath
+     * @return
+     */
+    private static AbstractTemplateNode parseNode(Element element, String parentReferencePath) {
         AbstractTemplateNode node = null;
 
         switch (element.getName()) {
@@ -106,8 +114,14 @@ public class XmlUtils {
             throw new RuntimeException("无法解析的节点：" + element.getName());
         }
 
+        if (node instanceof Template) {
+            node.setReferencePath(parentReferencePath + JavaLanguageUtil.JAVA_DOT + TemplateParam.MODULE_NAME.getExpression());
+        } else {
+            node.setReferencePath(parentReferencePath + JavaLanguageUtil.JAVA_DOT + node.getName());
+        }
+
         for (Element child : element.getChildren()) {
-            node.addChild(parseNode(child));
+            node.addChild(parseNode(child, node.getReferencePath()));
         }
 
         return node;
@@ -140,6 +154,13 @@ public class XmlUtils {
         TemplateClass templateClass = new TemplateClass();
         templateClass.setName(child.getAttributeValue(ATTR_NAME));
         templateClass.setContent(child.getText());
+
+        String text = child.getAttributeValue(ATTR_IMPORT);
+        text = JavaLanguageUtil.noSquareBrackets(text);
+        if (StringUtils.isNotEmpty(text)) {
+            templateClass.setImportClass(Arrays.asList(text.split(TemplateConstants.STRING_LIST_SPLIT)));
+        }
+
         return templateClass;
     }
 
@@ -215,24 +236,9 @@ public class XmlUtils {
     private static Element buildClassElement(TemplateClass node) {
         Element element = new Element(ELEMENT_CLASS);
         element.setAttribute(ATTR_NAME, node.getName());
+        element.setAttribute(ATTR_IMPORT, node.getImportClass().toString());
         element.setText(node.getContent());
         return element;
     }
 
-    public static void main(String[] args) {
-        File file = new File("e:/test.xml");
-        Element root = new Element("root");
-        Document document = new Document(root);
-
-        Format format = Format.getPrettyFormat();
-        format.setIndent("\t");
-        root.setText("one line \n two line");
-
-        XMLOutputter outPutter = new XMLOutputter(format);
-        try (FileOutputStream fos = new FileOutputStream(file)) {
-            outPutter.output(document, fos);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -29,6 +29,10 @@ public class PluginContext {
      * 项目根路径列表，其中包含多种根路径，如测试路径，资源路径，源码路径
      */
     private List<String> projectRootPath = new ArrayList<>(3);
+    /**
+     * 使用模板时选中的包
+     */
+    private String selectPackage;
 
     public PluginContext(String selectTemplate, String systemName, String humpName, String lineName) {
         this.selectTemplate = selectTemplate;
@@ -55,5 +59,13 @@ public class PluginContext {
 
     public List<String> getProjectRootPath() {
         return projectRootPath;
+    }
+
+    public void setSelectPackage(String selectPackage) {
+        this.selectPackage = selectPackage;
+    }
+
+    public String getSelectPackage() {
+        return selectPackage;
     }
 }

@@ -99,7 +99,7 @@ public class EditTemplateForm {
             return;
         }
 
-        new EditClassDialog(editTemplateDialog, null, parentTemplateNode).showAndGet();
+        new EditClassDialog(editTemplateDialog, null, parentTemplateNode, this.tempTemplate).showAndGet();
     }
 
     private void doEdit() {
@@ -125,7 +125,7 @@ public class EditTemplateForm {
         if (templateNode instanceof TemplatePackage) {
             new EditPackageDialog(editTemplateDialog, (TemplatePackage) templateNode, parentTemplateNode).showAndGet();
         } else if (templateNode instanceof TemplateClass) {
-            new EditClassDialog(editTemplateDialog, (TemplateClass) templateNode, parentTemplateNode).showAndGet();
+            new EditClassDialog(editTemplateDialog, (TemplateClass) templateNode, parentTemplateNode, this.tempTemplate).showAndGet();
         } else {
             MessageUtils.showMessageLog(MessageType.ERROR, "不识别的类型：{}", templateNode.getClass());
         }

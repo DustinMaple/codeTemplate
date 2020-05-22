@@ -21,14 +21,11 @@ public class TemplatePackage extends AbstractTemplateNode {
     }
 
     public TemplatePackage(TemplatePackage templatePackage) {
-        this.setName(templatePackage.getName());
-        for (AbstractTemplateNode child : templatePackage.getChildren()) {
-            this.getChildren().add(child.copy());
-        }
+        super(templatePackage);
     }
 
     @Override
-    protected PsiElement createSelfPsiElement(Project project, PluginContext context, PsiElement parentElement) {
+    public PsiElement createSelfPsiElement(Project project, PluginContext context, PsiElement parentElement, Template template) {
         if (!(parentElement instanceof PsiJavaDirectoryImpl)) {
             throw new RuntimeException("创建模板错误，parentElement参数不是一个目录");
         }

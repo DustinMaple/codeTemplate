@@ -47,6 +47,7 @@ public class PluginRuntimeData {
      */
     public void addTemplate(Template template) {
         templateTreeMap.put(template.getName(), template);
+        template.prepareCache();
     }
 
     public static PluginRuntimeData getInstance() {
@@ -58,7 +59,7 @@ public class PluginRuntimeData {
     }
 
     public void addTemplates(List<Template> templates) {
-        templates.forEach(template -> templateTreeMap.put(template.getName(), template));
+        templates.forEach(this::addTemplate);
     }
 
     public void setProject(Project project) {
