@@ -12,6 +12,9 @@
 
 ### New Feature
 
+* 在类编辑界面增加填写依赖类功能，被依赖的类会被自动导入；
+* 在同一个模板下不支持添加同名的类；
+
 ## Version 1.0
 
 The first version.
