@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+	<class name="WingService">public interface WingService{\n\t\n}\n</class>
+</templates>

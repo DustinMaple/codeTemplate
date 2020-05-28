@@ -58,9 +58,12 @@ public class XmlUtils {
         List<Element> children = element.getChildren();
         List<Template> result = new ArrayList<>(children.size());
 
+        Template template;
         for (Element templateElement : children) {
             if (ELEMENT_TEMPLATE.equals(templateElement.getName())) {
-                result.add((Template) parseNode(templateElement, ""));
+                template = (Template) parseNode(templateElement, "");
+                template.refreshReference("");
+                result.add(template);
             }
         }
 

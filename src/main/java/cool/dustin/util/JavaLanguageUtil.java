@@ -25,6 +25,6 @@ public class JavaLanguageUtil {
      * @return
      */
     public static String noSquareBrackets(String str) {
-        return str.replaceAll("\\[|]", "");
+        return str == null ? "" : str.replaceAll("[\\[\\]]", "");
     }
 }

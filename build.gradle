@@ -8,7 +8,9 @@ group 'cool.dustin'
 def ideaVersionExternDefinition = System.getenv("IDEA_VERSION")
 def ideaVersion = 'LATEST-EAP-SNAPSHOT'
 ideaVersion = ideaVersionExternDefinition ? ideaVersionExternDefinition : ideaVersion
-def pluginVersion = codeVersion + "-" + ideaVersion
+def pluginVersion = codeVersion
+
+sourceCompatibility = 1.8
 
 version pluginVersion
 
@@ -25,13 +27,14 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version ideaVersion
+
+    pluginName "CodeTemplate"
     // 解决版本兼容问题
     intellij.updateSinceUntilBuild false
     // 添加下面这个插件语句，才可以在代码中使用PsiJava相关内容
     plugins 'java'
 }
 patchPluginXml {
-    changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+    pluginDescription(file(descriptionFile).text)
+    changeNotes(file(changesFile).text)
 }

@@ -2,6 +2,8 @@ package cool.dustin.model;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.siyeh.ig.psiutils.JavaLoggingUtils;
+import cool.dustin.util.JavaLanguageUtil;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -140,5 +142,9 @@ public abstract class AbstractTemplateNode implements TreeNode<AbstractTemplateN
 
     public void setReferencePath(String referencePath) {
         this.referencePath = referencePath;
+    }
+
+    public void refreshReference(String parentReference){
+        this.referencePath = parentReference + JavaLanguageUtil.JAVA_DOT + this.name;
     }
 }

@@ -7,6 +7,9 @@ import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.file.PsiDirectoryFactory;
 import com.intellij.psi.impl.file.PsiJavaDirectoryImpl;
+import cool.dustin.constant.TemplateParam;
+import cool.dustin.util.JavaLanguageUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -95,5 +98,20 @@ public class Template extends AbstractTemplateNode {
 
     public TemplateClass findTemplateClassByName(String name) {
         return classMap.get(name);
+    }
+
+    @Override
+    public void refreshReference(String parentReference){
+        this.setReferencePath(JavaLanguageUtil.JAVA_DOT + TemplateParam.MODULE_NAME.getExpression());
+        refreshChildren(this);
+    }
+
+    private void refreshChildren(AbstractTemplateNode parent) {
+        for(AbstractTemplateNode node : parent.getChildren()){
+            node.refreshReference(parent.getReferencePath());
+            if(CollectionUtils.isNotEmpty(node.getChildren())){
+                refreshChildren(node);
+            }
+        }
     }
 }
