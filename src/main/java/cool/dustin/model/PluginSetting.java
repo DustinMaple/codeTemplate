@@ -9,7 +9,7 @@ public class PluginSetting {
     /**
      * 模板文件保存路径
      */
-    private String templateXmlPath = "e:/mock.xml";
+    private String templateXmlPath = "";
     /**
      * 作者
      */
