@@ -159,8 +159,7 @@ public class EditTemplateForm {
             return tempTemplate;
         }
 
-        DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectTreeNode.getParent();
-        selectNodeData = (TreeNodeData) parent.getUserObject();
+        selectNodeData = (TreeNodeData) selectTreeNode.getUserObject();
         AbstractTemplateNode templateNode = nameToNodeMap.get(selectNodeData.getId());
 
         if (templateNode instanceof TemplatePackage) {
