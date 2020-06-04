@@ -7,7 +7,6 @@ import cool.dustin.constant.MessageDefine;
 import cool.dustin.datas.PluginRuntimeData;
 import cool.dustin.model.PluginSetting;
 import cool.dustin.util.MessageUtils;
-import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,10 +22,6 @@ public class PluginInitializeService implements StartupActivity {
         PluginSetting setting = instance.getState();
         if (setting == null) {
             MessageUtils.showMessage(MessageDefine.NO_SETTING);
-            return;
-        }
-
-        if (StringUtils.isEmpty(setting.getTemplateXmlPath())) {
             return;
         }
 

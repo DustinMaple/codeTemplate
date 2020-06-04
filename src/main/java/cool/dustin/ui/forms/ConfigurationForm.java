@@ -88,12 +88,16 @@ public class ConfigurationForm {
     }
 
     private void init() {
-        initConfigFilePath();
-        initAuthor();
         selectButton.addActionListener((event) -> doSelectFile());
         createButton.addActionListener((event) -> doCreate());
         editButton.addActionListener((event) -> doEdit());
         deleteButton.addActionListener((event) -> doDelete());
+
+        if (StringUtils.isEmpty(CodeTemplateState.getInstance().getSetting().getTemplateXmlPath())) {
+            return;
+        }
+        initConfigFilePath();
+        initAuthor();
         initTable();
     }
 
