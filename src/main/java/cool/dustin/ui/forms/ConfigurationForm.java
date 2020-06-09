@@ -93,12 +93,15 @@ public class ConfigurationForm {
         editButton.addActionListener((event) -> doEdit());
         deleteButton.addActionListener((event) -> doDelete());
 
+        initTable();
+
         if (StringUtils.isEmpty(CodeTemplateState.getInstance().getSetting().getTemplateXmlPath())) {
             return;
         }
+
         initConfigFilePath();
         initAuthor();
-        initTable();
+        refreshTableData();
     }
 
     private void initAuthor() {
@@ -170,8 +173,6 @@ public class ConfigurationForm {
         columns.nextElement().setPreferredWidth(300);
         templatesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         templatesTable.removeEditor();
-
-        refreshTableData();
     }
 
     private void doCreate() {
