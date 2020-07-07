@@ -26,8 +26,8 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version ideaVersion
-
+//    version ideaVersion
+    localPath localIdeaPath
     pluginName "CodeTemplate"
     // 解决版本兼容问题
     intellij.updateSinceUntilBuild false
